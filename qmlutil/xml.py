@@ -74,8 +74,8 @@ class TypeExtractor(object):
     
     def __init__(self, qml):
         self.qml = qml
-        XSDtypes = dict()
-        PYtypes = dict()
+        self.XSDtypes = dict()
+        self.PYtypes = dict()
     
     def entype(self, node, name=""):
         """

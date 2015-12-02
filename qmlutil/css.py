@@ -934,7 +934,7 @@ class CSSToQMLConverter(object):
         )
         # Set the prefor if you gave on origin or the event table has one
         if prefor:
-            originID_rid = "{0}/{1}".format('origin', orid)
+            originID_rid = "{0}/{1}".format('origin', prefor)
             event['preferredOriginID'] = self._uri(originID_rid)
         
         # Unique resource-id/local-id
@@ -957,9 +957,9 @@ class CSSToQMLConverter(object):
 
         Should be valid for BED or BED-RT
         """
-        allowed = ('origin', 'magnitude', 'stationMagnitude', 'focalMechanism', 
-            'reading', 'pick', 'amplitude', 'description', 'comment',
-            'creationInfo')
+        allowed = ('event', 'origin', 'magnitude', 'stationMagnitude', 
+            'focalMechanism', 'reading', 'pick', 'amplitude', 'description',
+            'comment', 'creationInfo')
         
         dtnow = datetime.datetime.utcnow()
         ustamp = int(_ts(dtnow) * 10**6)
