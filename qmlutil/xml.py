@@ -171,17 +171,25 @@ class TypeExtractor(object):
         return self.entype(self.qml)
 
 
-def dumps(obj, *args, **kwargs):
+def ignore_null(k, v):
+    """
+    Preprocessor for xmltodict.unpasre that ignores keys with None value"""
+    if v is None:
+        return None
+    return k, v
+
+
+def dumps(input_dict, *args, **kwargs):
     """
     Dump QML dict object to XML string
     """
-    return xmltodict.unparse(obj, *args, **kwargs)
+    return xmltodict.unparse(input_dict, *args, **kwargs)
 
 # TODO: add kwargs for typing/conversions???
 #
-def loads(f, *args, **kwargs):
+def loads(xml_input, *args, **kwargs):
     """Load QML dict object from XML"""
-    return xmltodict.parse(f, *args, **kwargs)
+    return xmltodict.parse(xml_input, *args, **kwargs)
 
 # Testing
 def main():

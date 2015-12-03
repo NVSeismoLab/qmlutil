@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-qmlutil.css
+qmlutil.css.css2qml
 
     Mark C. Williams (2015)
     Nevada Seismological Laboratory
 
-    Converter class to map CSS3.0 to QuakeML schema
+    Converter classes to map CSS3.0 to QuakeML schema
 
 
 Classes
 =======
-CSSToQuakeMLConverter : methods to convert CSS to QuakeML schema
+CSSToQMLConverter : methods to convert CSS to QuakeML schema
 ---------------------
 USE: 
 >>> c = CSSToQuakeMLConverter(
@@ -19,7 +19,6 @@ USE:
 ...    utc_factory=timestamp2isostr
 ...    )
 
-QuakeMLToCSSConverter : (Not Implemented)
 
 NOTES
 -----
@@ -27,15 +26,20 @@ This is a shot at implementing a schema converter in pure python. The goal is
 to enable dict->dict conversion between formats. There are some caveats, based
 on the schemas:
 
-1) CSS3.0 input dicts can (must) contain joined, or "view" records.
+1) CSS3.0 input dicts can contain joined, or "view" records for completeness.
 2) CSS3.0 view keys are namespaced by table for uniqueness (only if necessary)
-3) QuakeML schema uses 'xmltodict' style (for keys, dicts, lists). This means
-   it's probably incompatible with JSON-LD. Hopefully falls under YAGNI.
+3) This QML schema uses 'xmltodict' style (for keys, dicts, lists). This means
+   it's maybe incompatible with JSON-LD. Hopefully falls under YAGNI.
 
 """
 import math
 import datetime
 import uuid
+
+try:
+    from collections import OrderedDict as Dict
+except ImportError as e:
+    Dict = dict
 
 # Namespaces used by the XML serializer
 Q_NAMESPACE ="http://quakeml.org/xmlns/quakeml/1.2"       # xmlns:q
@@ -47,8 +51,21 @@ CSS_NAMESPACE = 'http://www.seismo.unr.edu/schema/css3.0' # xmlns:css
 # Time format for string
 RFC3339 = '%Y-%m-%dT%H:%M:%S.%fZ'
 
-# set default mapping to use
-Dict = dict
+# Default weight to use based on timedef
+TIMEDEF_WEIGHT = dict(d=1.0, n=0.0)
+
+# Default CSS3.0 etypes to QML event types
+ETYPE_MAP = {
+    'qb' : "quarry blast",
+    'eq' : "earthquake",
+    'me' : "meteorite",
+    'ex' : "explosion",
+    'o'  : "other event",
+    'l'  : "earthquake",
+    'r'  : "earthquake",
+    't'  : "earthquake",
+    'f'  : "earthquake",
+}
 
 
 def _dt(timestamp):
@@ -128,22 +145,6 @@ def _get_NE_on_ellipse(A, B, strike):
     return n, e
 
 
-def _default_wgt(timedef):
-    """
-    Assign a default weight based on whether the pick was used in a location
-    
-    timedef is a str where:
-        "d" --> 1.0
-        "n" --> 0.0
-    """
-    #if timedef:
-    #    if timedef == "d":
-    #        return 1.0
-    #    elif timedef == "n":
-    #        return 0.0
-    return dict(d=1.0, n=0.0).get(timedef)
-
-
 class ResourceURIGenerator(object):
     """
     Create function to generate URI's for QuakeML
@@ -191,9 +192,11 @@ class CSSToQMLConverter(object):
     get_event_type : static class method to convert CSS origin type flag
 
     """
+    #nsmap = {'css': CSS_NAMESPACE} # NS to use for extra css elements/attrib
+    
     _auth_id = "local"  # default to use if rid_factory is N/A
-
-    nsmap = {'css': CSS_NAMESPACE} # NS to use for extra css elements/attrib
+    
+    etype_map = dict(ETYPE_MAP)
     rid_factory = None
     utc_factory = None # function(timestamp: float) 
     agency  = 'XX'    # agency ID, ususally net code
@@ -207,48 +210,22 @@ class CSSToQMLConverter(object):
         except:
             return self._auth_id
 
-    @staticmethod 
-    def get_event_type(etype, etype_map=None):
+    def get_event_type(self, etype):
         """
         Map a CSS3.0 etype origin flag to a QuakeML event type
         
-        Default dictionary will be updated by anything in 'etype_map'
-
         Inputs
         ------
         etype : str of a valid etype
-        etype_map: dict of {etype: eventType} added to standard css3.0 one
-
         """
-        event_type_map = {
-            'qb' : "quarry blast",
-            'eq' : "earthquake",
-            'me' : "meteorite",
-            'ex' : "explosion",
-            'o'  : "other event",
-            'l'  : "earthquake",
-            'r'  : "earthquake",
-            't'  : "earthquake",
-            'f'  : "earthquake",
-            }
-        # Add custom flags
-        if etype_map:
-            event_type_map.update(etype_map)
-        # Try to find a direct match, then check for stuff like 'LF'
-        if etype.lower() in event_type_map:
-            return event_type_map[etype.lower()]
-        else:
-            for k,v in event_type_map.items():
-                if k in etype.lower():
-                    return v
-    
-    @classmethod
-    def origin_event_type(cls, origin, emap=None):
+        return self.etype_map.get(etype, "not reported")
+ 
+    def origin_event_type(self, origin, emap=None):
         """Return a proper event_type from a CSS3.0 etype flag stored in an origin"""
         # TODO: fix namespace/strategy?
         if 'css:etype' in origin:
             etype = origin['css:etype']
-            return cls.get_event_type(etype, etype_map=emap)
+            return self.get_event_type(etype)
         else:
             return "not reported"
     
@@ -271,9 +248,17 @@ class CSSToQMLConverter(object):
         """
         self.event = Dict()
         
+        # Allow setting of map at class level by noclobber update
+        if 'etype_map' in kwargs:
+            etype_map = kwargs.pop('etype_map')
+            _etypemap = dict(self.etype_map)
+            _etypemap.update(etype_map)
+            self.etype_map = _etypemap
+        
         for key in kwargs:
             if hasattr(self, key):
                 setattr(self, key, kwargs[key])
+        
         if self.rid_factory is None:
             self.rid_factory = ResourceURIGenerator()
     
@@ -318,30 +303,35 @@ class CSSToQMLConverter(object):
         Join
         ----
         origin <- origerr [orid] (outer)
-        """ 
-        #-- Basic location ------------------------------------------
-        origin = Dict(
-            latitude = Dict(
-                value = db.get('lat')
-            ),
-            longitude = Dict(
-                value = db.get('lon')
-            ),
-            depth = Dict(
-                value = _km2m(db.get('depth'))
-            ),
-            time = Dict(
-                value = self._utc(db.get('time'))
-            ),
-        )
+        """
+        posted_author = _str(db.get('auth'))
+        mode, status = self.get_event_status(posted_author)
+        originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
         
-        #-- Quality -------------------------------------------------
-        origin['quality'] = Dict(
-            associatedPhaseCount = db.get('nass'),
-            usedPhaseCount = db.get('ndef'),
-            standardError = db.get('sdobs'),
-        )
-
+        #-- Basic Hypocenter ----------------------------------------
+        origin = Dict([
+            ('@publicID', self._uri(originID_rid)),
+            ('latitude', Dict(value = db.get('lat'))),
+            ('longitude', Dict(value = db.get('lon'))),
+            ('depth', Dict(value = _km2m(db.get('depth')))),
+            ('time', Dict(value = self._utc(db.get('time')))),
+            ('quality' , Dict([
+                ('standardError', db.get('sdobs')),
+                ('usedPhaseCount', db.get('ndef')),
+                ('associatedPhaseCount', db.get('nass')),
+                ]),
+            ),
+            ('evaluationMode', mode),
+            ('evaluationStatus', status),
+            ('creationInfo', Dict([
+                ('creationTime', self._utc(db.get('lddate'))),
+                ('agencyID', self.agency), 
+                ('author', posted_author),
+                ('version', db.get('orid')),
+                ])
+            ),
+        ])
+        
         #-- Solution Uncertainties ----------------------------------
         # in CSS the ellipse is projected onto the horizontal plane
         # using the covariance matrix
@@ -350,15 +340,15 @@ class CSSToQMLConverter(object):
         s = db.get('strike')
         dep_u = _km2m(db.get('sdepth'))
         time_u = db.get('stime')
-
-        uncertainty = Dict(
-            preferredDescription = "horizontal uncertainty",
-            horizontalUncertainty = a,
-            maxHorizontalUncertainty = a,
-            minHorizontalUncertainty = b,
-            azimuthMaxHorizontalUncertainty = s,
-        )
-
+        
+        # There can be multiple uncertainties -- only add if exists 
+        uncertainty = Dict([
+            ('preferredDescription', "horizontal uncertainty"),
+            ('horizontalUncertainty', a),
+            ('maxHorizontalUncertainty', a),
+            ('minHorizontalUncertainty', b),
+            ('azimuthMaxHorizontalUncertainty', s),
+        ])
         if db.get('conf') is not None:
             uncertainty['confidenceLevel'] = db.get('conf') * 100.  
 
@@ -377,27 +367,12 @@ class CSSToQMLConverter(object):
         if time_u:
             origin['time']['uncertainty'] = time_u
 
-        #-- Analyst-determined Status -------------------------------
-        posted_author = _str(db.get('auth'))
-        mode, status = self.get_event_status(posted_author)
-        origin['evaluationMode'] = mode
-        origin['evaluationStatus'] = status
-        
         # Save etype per origin due to schema differences...
         # TODO: add namespace to top node OR use explicitly
         css_etype = _str(db.get('etype'))
         #origin[self.nsmap['css']+':etype'] = css_etype
         origin['css:etype'] = css_etype
 
-        origin['creationInfo'] = Dict(
-            creationTime = self._utc(db.get('lddate')),
-            agencyID = self.agency, 
-            version = db.get('orid'),
-            author = posted_author,
-        )
-        # Unique resource-id/local-id
-        originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
-        origin['@publicID'] = self._uri(originID_rid)
         return origin
     
     def map_stamag2stationmagnitude(self, db):
@@ -405,22 +380,6 @@ class CSSToQMLConverter(object):
         Map stamag record to StationMagnitude
         """
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
-        
-        stationmagnitude = Dict(
-            mag = Dict(
-                value = db.get('magnitude'),
-                uncertainty = db.get('uncertainty'),
-            ),
-            type = db.get('magtype'),
-            creationInfo = Dict(
-                creationTime = self._utc(db.get('lddate')),
-                agencyID = self.agency,
-                version = db.get('magid'),
-                author = db.get('auth'),
-            ),
-            originID = self._uri(originID_rid),
-        )
-        # Unique resource-id/local-id
         stamagID_rid = "{0}/{1}-{2}-{3}-{4}".format(
             'stamag',
             db.get('sta'),
@@ -428,7 +387,24 @@ class CSSToQMLConverter(object):
             db.get('orid') or uuid.uuid4(),
             db.get('magid') or uuid.uuid4(),
         )
-        stationmagnitude['@publicID'] = self._uri(stamagID_rid)
+        
+        stationmagnitude = Dict([
+            ('@publicID', self._uri(stamagID_rid)),
+            ('mag', Dict([
+                ('value', db.get('magnitude')),
+                ('uncertainty', db.get('uncertainty')),
+                ]),
+            ),
+            ('type', db.get('magtype')),
+            ('creationInfo', Dict([
+                ('creationTime', self._utc(db.get('lddate'))),
+                ('agencyID', self.agency),
+                ('author', db.get('auth')),
+                ('version', db.get('magid')),
+                ]),
+            ),
+            ('originID', self._uri(originID_rid)),
+        ])
         return stationmagnitude
 
     def map_netmag2magnitude(self, db):
@@ -452,27 +428,28 @@ class CSSToQMLConverter(object):
         posted_author = _str(db.get('auth'))
         mode, status = self.get_event_status(posted_author)
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
-        
-        magnitude = Dict(
-            mag = Dict(
-                value = db.get('magnitude'),
-                uncertainty = db.get('uncertainty'),
-            ),
-            type = db.get('magtype'),
-            stationCount = db.get('nsta'),
-            originID = self._uri(originID_rid),
-            evaluationMode = mode,
-            evaluationStatus = status,
-            creationInfo = Dict(
-                creationTime = self._utc(db.get('lddate')),
-                agencyID = self.agency,
-                version = db.get('magid'),
-                author = posted_author,
-            )
-        )
-        # Unique resource-id/local-id
         netmagID_rid = "{0}/{1}".format('netmag', db.get('magid') or uuid.uuid4())
-        magnitude['@publicID'] = self._uri(netmagID_rid)
+        
+        magnitude = Dict([
+            ('@publicID', self._uri(netmagID_rid)),
+            ('mag', Dict([
+                ('value', db.get('magnitude')),
+                ('uncertainty', db.get('uncertainty')),
+                ])
+            ),
+            ('type', db.get('magtype')),
+            ('stationCount', db.get('nsta')),
+            ('originID', self._uri(originID_rid)),
+            ('evaluationMode', mode),
+            ('evaluationStatus', status),
+            ('creationInfo', Dict([
+                ('creationTime', self._utc(db.get('lddate'))),
+                ('agencyID', self.agency),
+                ('author', posted_author),
+                ('version', db.get('magid')),
+                ])
+            ),
+        ])
         return magnitude
 
     def map_origin2magnitude(self, db, mtype='ml'):
@@ -494,27 +471,29 @@ class CSSToQMLConverter(object):
         Any object that supports the dict 'get' method can be passed as
         input, e.g. OrderedDict, custom classes, etc.
         """
+        author = db.get('auth')
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
-        
-        magnitude = Dict(
-            mag = Dict(value = db.get(mtype)),
-            type = mtype, 
-            originID = self._uri(originID_rid),
-            creationInfo = Dict(
-                creationTime = self._utc(db.get('lddate')), 
-                agencyID = self.agency,
-                version = db.get('orid'),
-                author = db.get('auth'),
-            ),
-        )
-        if magnitude['creationInfo']['author'].startswith('orb'):
-            magnitude['evaluationStatus'] = "preliminary"
-        else:
-            magnitude['evaluationStatus'] = "reviewed"
-        
-        # Unique resource-id/local-id
         origmagID_rid = "{0}/{1}".format('origin-{0}'.format(mtype), db.get('orid') or uuid.uuid4())
-        magnitude['@publicID'] = self._uri(originID_rid)
+        
+        if author.startswith('orb'):
+            status = "preliminary"
+        else:
+            status = "reviewed"
+        
+        magnitude = Dict([
+            ('@publicID', self._uri(originID_rid)),
+            ('mag', Dict(value = db.get(mtype))),
+            ('type', mtype),
+            ('originID', self._uri(originID_rid)),
+            ('evaluationStatus', status),
+            ('creationInfo', Dict([
+                ('creationTime', self._utc(db.get('lddate'))), 
+                ('agencyID', self.agency),
+                ('version', db.get('orid')),
+                ('author', author),
+                ])
+            ),
+        ])
         return magnitude
     
     def map_arrival2pick(self, db):
@@ -545,6 +524,14 @@ class CSSToQMLConverter(object):
         def_net = self.agency[:2].upper()
         css_sta = db.get('sta')
         css_chan = db.get('chan')
+        wfID_rid = "{0}/{1}-{2}-{3}".format(
+            'wfdisc', 
+            css_sta,
+            css_chan,
+            int(db.get('time') * 10**6),
+        )
+        pickID_rid = "{0}/{1}".format('arrival', db.get('arid') or uuid.uuid4())
+        
         
         on_qual = _str(db.get('qual')).lower()
         if 'i' in on_qual:
@@ -574,34 +561,36 @@ class CSSToQMLConverter(object):
         if pick_mode is "manual":
             pick_status = "reviewed"
         
-        pick = Dict(
-            time = Dict(
-                value = self._utc(db.get('time')),
-                uncertainty = db.get('deltim'),
+        pick = Dict([
+            ('@publicID', self._uri(pickID_rid)),
+            ('time', Dict([
+                ('value', self._utc(db.get('time'))),
+                ('uncertainty', db.get('deltim')),
+                ])
             ),
-            waveformID = Dict([
+            ('waveformID', Dict([
                 ('@stationCode', db.get('fsta') or css_sta), 
                 ('@channelCode', db.get('fchan') or css_chan),
                 ('@networkCode', db.get('snet') or def_net),
                 ('@locationCode', db.get('loc') or ""),
-            ]),
-            phaseHint = Dict(code=db.get('iphase')),
-            polarity = polarity,
-            onset = onset,
-            creationInfo = Dict(
-                version = db.get('arid'), 
-                creationTime = self._utc(db.get('arrival.lddate') or db.get('lddate')), 
-                agencyID = self.agency, 
-                author = db.get('auth'),
+                ('resourceURI', self._uri(wfID_rid)),
+                ])
             ),
-            #backazimuth = Dict(value=db.get('azimuth'), uncertainty=db.get('delaz')),
-            #horizontalSlowness = Dict(value=db.get('slow'), uncertainty=db.get('delslo')),
-            evaluationMode = pick_mode,
-            evaluationStatus = pick_status,
-        )
-        # Unique resource-id/local-id
-        pickID_rid = "{0}/{1}".format('arrival', db.get('arid') or uuid.uuid4())
-        pick['@publicID'] = self._uri(pickID_rid)
+            ('phaseHint', Dict(code=db.get('iphase'))),
+            ('polarity', polarity),
+            ('onset', onset),
+            ('creationInfo', Dict([
+                ('creationTime', self._utc(db.get('arrival.lddate') or db.get('lddate'))), 
+                ('agencyID', self.agency), 
+                ('author', db.get('auth')),
+                ('version', db.get('arid')), 
+                ])
+            ),
+            ('evaluationMode', pick_mode),
+            ('evaluationStatus', pick_status),
+            #('backazimuth', Dict([('value, db.get('azimuth')), ('uncertainty', db.get('delaz'))])),
+            #('horizontalSlowness', Dict([('value', db.get('slow')), ('uncertainty', db.get('delslo'))])),
+        ])
         return pick
     
     def map_assoc2arrival(self, db):
@@ -625,41 +614,37 @@ class CSSToQMLConverter(object):
         ----
         assoc
         """
-        # Unique resource-id/local-id
+        css_timedef = _str(db.get('timedef'))
         pickID_rid = "{0}/{1}".format('arrival', db.get('arid') or uuid.uuid4())
         vmodelID_rid = "{0}/{1}".format('vmodel', db.get('vmodel') or uuid.uuid4())
-        arr = Dict(
-            pickID = self._uri(pickID_rid),
-            phase = db.get('phase'),
-            azimuth = db.get('esaz'),
-            distance = db.get('delta'),
-            timeResidual = db.get('timeres'),
-            timeWeight = db.get('wgt'),
-            earthModelID = self._uri(vmodelID_rid, authority_id="local", schema="smi"),
-            creationInfo = Dict(
-                version = db.get('arid'), 
-                creationTime = self._utc(db.get('lddate')),
-                agencyID = self.agency,
-            ),
-        )
-
-        # Save timedef due to schema differences...
-        # TODO: add namespace to top node OR use explicitly
-        css_timedef = _str(db.get('timedef'))
-        #arr[self.nsmap['css']+':timedef'] = css_timedef
-        arr['css:timedef'] = css_timedef
-
-        # Assign a default weight based on timedef if none in db
-        if arr.get('timeWeight') is None:
-            arr['timeWeight'] = _default_wgt(css_timedef)
-        
-        # Unique resource-id/local-id
         assocID_rid = "{0}/{1}-{2}".format(
             'assoc',
             db.get('orid') or uuid.uuid4(), 
             db.get('arid') or uuid.uuid4(),
         )
-        arr['@publicID'] = self._uri(assocID_rid)
+        
+        arr = Dict([
+            ('@publicID', self._uri(assocID_rid)),
+            ('pickID', self._uri(pickID_rid)),
+            ('phase', db.get('phase')),
+            ('azimuth', db.get('esaz')),
+            ('distance', db.get('delta')),
+            ('timeResidual', db.get('timeres')),
+            ('timeWeight', db.get('wgt')),
+            ('earthModelID', self._uri(vmodelID_rid, authority_id="local", schema="smi")),
+            ('creationInfo', Dict([
+                ('creationTime', self._utc(db.get('lddate'))),
+                ('agencyID', self.agency),
+                ('version', db.get('arid')),
+                ])
+            ),
+            ('css:timedef', css_timedef),
+        ])
+
+        # Assign a default weight based on timedef if none in db
+        if arr.get('timeWeight') is None:
+            arr['timeWeight'] = TIMEDEF_WEIGHT.get(css_timedef)
+        
         return arr
 
     def map_assocarrival2pickarrival(self, db):
@@ -712,47 +697,51 @@ class CSSToQMLConverter(object):
         # NOTE: Antelope schema for this is wrong, no nulls defined
         # 
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
+        fplaneID_rid = "{0}/{1}".format('fplane', db.get('mechid') or uuid.uuid4())
         author_string = ':'.join([db.get('algorithm'), db.get('auth')])
 
-        nps = Dict(
-            nodalPlane1 = Dict(
-                strike = Dict(value = db.get('str1')),
-                dip = Dict(value = db.get('dip1')),
-                rake = Dict(value = db.get('rake1')),
+        nodal_planes = Dict([
+            ('nodalPlane1', Dict([
+                ('strike', Dict(value = db.get('str1'))),
+                ('dip', Dict(value = db.get('dip1'))),
+                ('rake', Dict(value = db.get('rake1'))),
+                ])
             ),
-            nodalPlane2 = Dict(
-                strike = Dict(value = db.get('str2')),
-                dip = Dict(value = db.get('dip2')),
-                rake = Dict(value = db.get('rake2')),
+            ('nodalPlane2', Dict([
+                ('strike', Dict(value = db.get('str2'))),
+                ('dip', Dict(value = db.get('dip2'))),
+                ('rake', Dict(value = db.get('rake2'))),
+                ])
             ),
-        )
-        nps['@preferredPlane'] = 1
+            ('@preferredPlane', 1),
+        ])
 
-        prin_ax = Dict(
-            tAxis = Dict(
-                azimuth = Dict(value = db.get('taxazm')),
-                plunge = Dict(value = db.get('taxplg')),
+        principal_axes = Dict([
+            ('tAxis', Dict([
+                ('azimuth', Dict(value = db.get('taxazm'))),
+                ('plunge', Dict(value = db.get('taxplg'))),
+                ])
             ),
-            pAxis = Dict(
-                azimuth = Dict(value = db.get('paxazm')),
-                plunge = Dict(value = db.get('paxplg')),
+            ('pAxis', Dict([
+                ('azimuth', Dict(value = db.get('paxazm'))),
+                ('plunge', Dict(value = db.get('paxplg'))),
+                ])
             ),
-        )
+        ])
 
-        fm = Dict(
-            triggeringOriginID = self._uri(originID_rid),
-            nodalPlanes = nps,
-            principalAxes = prin_ax,
-            creationInfo = Dict(
-                version = db.get('mechid'), 
-                creationTime = self._utc(db.get('lddate')), 
-                agencyID = self.agency,
-                author = author_string,
+        fm = Dict([
+            ('@publicID', self._uri(fplaneID_rid)),
+            ('triggeringOriginID', self._uri(originID_rid)),
+            ('nodalPlanes', nodal_planes),
+            ('principalAxes', principal_axes),
+            ('creationInfo', Dict([
+                ('creationTime', self._utc(db.get('lddate'))), 
+                ('agencyID', self.agency),
+                ('author', db.get('auth')),
+                ('version', db.get('mtid')), 
+                ])
             ),
-        )
-        # Unique resource-id/local-id
-        fplaneID_rid = "{0}/{1}".format('fplane', db.get('mechid') or uuid.uuid4())
-        fm['@publicID'] = self._uri(fplaneID_rid)
+        ])
         return fm
     
     # TODO: also do 'moment'???
@@ -780,75 +769,82 @@ class CSSToQMLConverter(object):
         in the netmag table, not here.
         """
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
-        
-        moment_tensor = Dict(
-            scalarMoment = db.get('scm'),
-            doubleCouple = db.get('pdc'),
-            tensor = Dict(
-                Mrr = Dict(value=db.get('tmrr')),
-                Mtt = Dict(value=db.get('tmtt')),
-                Mpp = Dict(value=db.get('tmpp')),
-                Mrt = Dict(value=db.get('tmrt')),
-                Mrp = Dict(value=db.get('tmrp')),
-                Mtp = Dict(value=db.get('tmtp')),
-            ),
-            creationInfo = Dict( 
-                version = db.get('mtid'), 
-                creationTime = self._utc(db['lddate']), 
-                agencyID = self.agency,
-                author = db.get('auth'),
-            ),
-        )
-        # Unique resource-id/local-id
         mtID_rid = "{0}/{1}".format('mt', db.get('mtid') or uuid.uuid4())
-        moment_tensor['@publicID'] = self._uri(mtID_rid)
-        
-        # now FocalMechanism
-        nps = Dict(
-            nodalPlane1 = Dict(
-                strike = Dict(value = db.get('str1')),
-                dip = Dict(value = db.get('dip1')),
-                rake = Dict(value = db.get('rake1')),
-            ),
-            nodalPlane2 = Dict(
-                strike = Dict(value = db.get('str2')),
-                dip = Dict(value = db.get('dip2')),
-                rake = Dict(value = db.get('rake2')),
-            ),
-        )
-        nps['@preferredPlane'] = 1
-
-        prin_ax = Dict(
-            tAxis = Dict(
-                azimuth = Dict(value = db.get('taxazm')),
-                plunge = Dict(value = db.get('taxplg')),
-                length = Dict(value = db.get('taxlength')),
-            ),
-            pAxis = Dict(
-                azimuth = Dict(value = db.get('paxazm')),
-                plunge = Dict(value = db.get('paxplg')),
-                length = Dict(value = db.get('paxlength')),
-            ),
-            nAxis = Dict(
-                azimuth = Dict(value = db.get('naxazm')),
-                plunge = Dict(value = db.get('naxplg')),
-                length = Dict(value = db.get('naxlength')),
-            ),
-        )
-        fm = Dict(
-            triggeringOriginID = self._uri(originID_rid),
-            nodalPlanes = nps,
-            principalAxes = prin_ax,
-            momentTensor = moment_tensor,
-            creationInfo = Dict(
-                version = db.get('mtid'), 
-                creationTime = self._utc(db.get('lddate')), 
-                agencyID = self.agency,
-                author = db.get('auth'),
-            ),
-        )
         mtfmID_rid = "{0}/{1}".format('mt-focalmech', db.get('mtid') or uuid.uuid4())
-        fm['@publicID'] = self._uri(mtfmID_rid)
+        
+        moment_tensor = Dict([
+            ('@publicID', self._uri(mtID_rid)),
+            ('scalarMoment', db.get('scm')),
+            ('doubleCouple', db.get('pdc')),
+            ('tensor', Dict([
+                ('Mrr', Dict(value=db.get('tmrr'))),
+                ('Mtt', Dict(value=db.get('tmtt'))),
+                ('Mpp', Dict(value=db.get('tmpp'))),
+                ('Mrt', Dict(value=db.get('tmrt'))),
+                ('Mrp', Dict(value=db.get('tmrp'))),
+                ('Mtp', Dict(value=db.get('tmtp'))),
+                ])
+            ),
+            ('creationInfo', Dict([
+                ('creationTime', self._utc(db['lddate'])), 
+                ('agencyID', self.agency),
+                ('author', db.get('auth')),
+                ('version', db.get('mtid')), 
+                ])
+            ),
+        ])
+        
+        nodal_planes = Dict([
+            ('nodalPlane1', Dict([
+                ('strike', Dict(value = db.get('str1'))),
+                ('dip', Dict(value = db.get('dip1'))),
+                ('rake', Dict(value = db.get('rake1'))),
+                ])
+            ),
+            ('nodalPlane2', Dict([
+                ('strike', Dict(value = db.get('str2'))),
+                ('dip', Dict(value = db.get('dip2'))),
+                ('rake', Dict(value = db.get('rake2'))),
+                ])
+            ),
+            ('@preferredPlane', 1),
+        ])
+
+        principal_axes = Dict([
+            ('tAxis', Dict([
+                ('azimuth', Dict(value = db.get('taxazm'))),
+                ('plunge', Dict(value = db.get('taxplg'))),
+                ('length', Dict(value = db.get('taxlength'))),
+                ])
+            ),
+            ('pAxis', Dict([
+                ('azimuth', Dict(value = db.get('paxazm'))),
+                ('plunge', Dict(value = db.get('paxplg'))),
+                ('length', Dict(value = db.get('paxlength'))),
+                ])
+            ),
+            ('nAxis', Dict([
+                ('azimuth', Dict(value = db.get('naxazm'))),
+                ('plunge', Dict(value = db.get('naxplg'))),
+                ('length', Dict(value = db.get('naxlength'))),
+                ])
+            ),
+        ])
+        
+        fm = Dict([
+            ('@publicID', self._uri(mtfmID_rid)),
+            ('triggeringOriginID', self._uri(originID_rid)),
+            ('nodalPlanes', nodal_planes),
+            ('principalAxes', principal_axes),
+            ('momentTensor', moment_tensor),
+            ('creationInfo', Dict([
+                ('creationTime', self._utc(db.get('lddate'))), 
+                ('agencyID', self.agency),
+                ('author', db.get('auth')),
+                ('version', db.get('mtid')), 
+                ])
+            ),
+        ])
         return fm
     
     def convert_origins(self, records):
@@ -907,7 +903,7 @@ class CSSToQMLConverter(object):
             pass  # schema == "moment" case too?
             
     @staticmethod
-    def nearest_cities_description(nearest_string):
+    def description(nearest_string, type="nearest cities"):
         """
         Return a dict eventDescription of type 'nearest cities'
 
@@ -915,7 +911,7 @@ class CSSToQMLConverter(object):
         ======
         nearest_string : str of decription for the text field
         """
-        return Dict(text=nearest_string, type="nearest cities")
+        return Dict(text=nearest_string, type=type)
     
     def map_event(self, db, anss=False):
         """
@@ -925,21 +921,22 @@ class CSSToQMLConverter(object):
         evid = db.get('evid')
         lddate = db.get('lddate')
         prefor = db.get('prefor') or db.get('orid')
-        event = Dict(
-            creationInfo = Dict(
-                creationTime = self._utc(lddate),
-                agencyID = self.agency,
-                version = str(evid),
+        eventID_rid = "{0}/{1}".format('event', evid)
+        
+        event = Dict([
+            ('@publicID', self._uri(eventID_rid)),
+            ('type', "not reported"),
+            ('creationInfo', Dict([
+                ('creationTime', self._utc(lddate)),
+                ('agencyID', self.agency),
+                ('version', str(evid)),
+                ])
             ),
-        )
+        ])
         # Set the prefor if you gave on origin or the event table has one
         if prefor:
             originID_rid = "{0}/{1}".format('origin', prefor)
             event['preferredOriginID'] = self._uri(originID_rid)
-        
-        # Unique resource-id/local-id
-        eventID_rid = "{0}/{1}".format('event', evid)
-        event['@publicID'] = self._uri(eventID_rid)
         #
         # Add the ANSS NS parameters automatically
         #
@@ -963,20 +960,20 @@ class CSSToQMLConverter(object):
         
         dtnow = datetime.datetime.utcnow()
         ustamp = int(_ts(dtnow) * 10**6)
-        eventParameters = Dict(
-            creationInfo = Dict(
-                creationTime = self._utc(_ts(dtnow)),
-                agencyID = self.agency,
-                version = str(ustamp),
+        catalogID_rid = "{0}/{1}".format('catalog', ustamp)
+        
+        eventParameters = Dict([
+            ('@publicID', self._uri(catalogID_rid)),
+            ('creationInfo', Dict([
+                ('creationTime', self._utc(_ts(dtnow))),
+                ('agencyID', self.agency),
+                ('version', str(ustamp)),
+                ])
             ),
-        )
+        ])
         for k in kwargs:
             if k in allowed:
                 eventParameters[k] = kwargs[k]
-        
-        # Unique resource-id/local-id
-        catalogID_rid = "{0}/{1}".format('catalog', ustamp)
-        eventParameters['@publicID'] = self._uri(catalogID_rid)
         return eventParameters
     
     # TODO: save nsmap in attributes, build as generator/mapped fxn
@@ -989,175 +986,4 @@ class CSSToQMLConverter(object):
             ('eventParameters', event_parameters),
         ])
         return Dict({'q:quakeml': qml})
-
-
-
-
-#-----------------------------------------------------------------------------
-# QUAKEML2CSS
-#-----------------------------------------------------------------------------
-
-class Counter(object):
-    """
-    Singleton counter as default ID generator
-
-    Should be a custom factory defined by user. This isn't safe for most
-    applications, but ok for testing/GIL ops.
-    """
-    _id = {}
-    
-    @classmethod
-    def set(cls, ns, value):
-        """Set a starting integer for a namespace"""
-        cls._id[ns] = value
-
-    @classmethod
-    def newint(cls, ns):
-        """Return a new integer ID given a namespace"""
-        if ns in cls._id:
-            cls._id[ns] += 1
-        else:
-            cls._id[ns] = 0
-        return cls._id[ns]
-
-
-def dget(dict_, keys, delim=':'):
-    """
-    Delimited dict get - Recursive get function for nested dicts
-
-    Recursive 'get' method for format: 'key1:key2' for d[key1][key2]
-    
-    keys : delimited string OR sequence of keys
-    delim : string of delimiter [':']
-    """
-    if isinstance(keys, str):
-        keys = keys.split(delim)
-    try:
-        for k in keys:
-            dict_ = dict_[k]
-    except KeyError:
-        return None
-    return dict_
-
-
-def delimited_getter(delim=':'):
-    """Closure delimited function version of dget"""
-    def _getter(dict_, keys):
-        return dget(dict_, keys, delim)
-    return _getter
-
-
-def dset(dict_, keys, value, delim=':'):
-    """Delimited nested dict setter"""
-    d = dict_
-    if isinstance(keys, str):
-        keys = keys.split(delim)
-    try:
-        for k in keys[:-1]:
-            d = d[k]
-    except KeyError:
-        d = None
-    if d is not None:
-        d[keys[-1]] = value
-
-
-def delimited_setter(delim=':'):
-    """Closure delimited function version of dset"""
-    def _setter(dict_, keys, value):
-        return dset(dict_, keys, value, delim)
-    return _setter
-
-
-class Delimiter(object):
-    """Class of delimitter with both getter and setter"""
-    _d = ':'
-
-    @property
-    def delimiter(self):
-        return self._d
-    
-    @delimiter.setter
-    def delimiter(self, value):
-        self._d = value
-        self.get = delimited_getter(self.delimiter)
-        self.set = delimited_setter(self.delimiter)
-
-    def __init__(self, delimiter=None):
-        if delimiter:
-            self.delimiter = delimiter
-
-
-D = Delimiter('|')
-
-#
-# TODO: typing... either use QuakeML types only, maybe push CSS typing up to 
-# Antelope level?
-#
-class QMLToCSSConverter(object):
-    """
-    """
-    css = dict()  # Top level set of tables
-    id_factory = Counter.newint
-
-    def newid(self, ns):
-        return self.id_factory(ns)
-
-    def _map_arrival(self, a):
-        pass
-
-    def _map_pick(self, p):
-        pass
-
-    def _map_magnitude(self, m):
-        pass
-
-    def _map_focalmech(self, fm):
-        pass
-    
-    # TODO: - handle lddate convert to timestamp etc
-    #       - pull author etc from creationInfo
-    def _map_origin(self, o):
-        """
-        Map QuakeML origin to CSS tables
-        """
-        origin = dict(
-            lat = D.get(o, 'latitude|value'), 
-            lon = D.get(o, 'longitude|value'), 
-            depth = D.get(o, 'depth|value'), 
-            time = D.get(o, 'time|value'), 
-            nass = D.get(o, 'quality|associatedPhaseCount'), 
-            ndef = D.get(o, 'quality|usedPhaseCount'), 
-        )
-        
-        # TODO: check if horizontal uncertainty exists?
-        # NOTE: There can be more than 1 uncertainty. Right now this code will
-        # just return a None if that happens, b/c the get will fail on a list.
-        origerr = dict(
-            sdobs = D.get(o, 'quality|standardError'),
-            stime = D.get(o, 'time|uncertainty'),
-            sdepth = D.get(o, 'depth|uncertainty'),  # TODO: m2km
-            smajax = D.get(o, 'originUncertainty|maxHorizonalUncertainty'), # TODO: m2km
-            sminax = D.get(o, 'originUncertainty|minHorizonalUncertainty'), # TODO: m2km
-            strike = D.get(o, 'originUncertainty|azimuthMaxHorizonalUncertainty'),
-            conf = D.get(o, 'originUncertainty|confidenceLevel'), # TODO: convert from percentage to decimal
-        )
-
-        if 'arrival' in o and isinstance(o, list):
-            # map mostly assoc values here, I believe...
-            # assoc = [self._map_arrival(a) for a in o['arrival']]
-            pass
-
-        css = dict(
-            origin = origin,
-            origerr = origerr,
-            assoc = assoc,
-        )
-        return css
-
-    def _map_event(self, e):
-        pass
-
-    def _map_catalog(self, c):
-        pass
-
 
