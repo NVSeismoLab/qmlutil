@@ -173,7 +173,8 @@ class TypeExtractor(object):
 
 def ignore_null(k, v):
     """
-    Preprocessor for xmltodict.unpasre that ignores keys with None value"""
+    Preprocessor for xmltodict.unpasre that ignores keys with None value
+    """
     if v is None:
         return None
     return k, v

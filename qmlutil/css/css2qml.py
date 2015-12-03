@@ -106,6 +106,26 @@ def _str(item):
         return ''
 
 
+def _dict(*args, **kwargs):
+    """
+    Return a dict only if at least one value is not None
+    """
+    dict_ = Dict(*args, **kwargs)
+    if dict_.values() == [None] * len(dict_):
+        return None
+    return dict_
+
+
+def _quan(*args, **kwargs):
+    """
+    Return a dict only if the value for key "value" is not None
+    """
+    dict_ = Dict(*args, **kwargs)
+    if dict_.get('value') is None:
+        return None
+    return dict_
+
+
 def _km2m(dist):
     """Convert from km to m only if dist is not None"""
     if dist is not None:
@@ -220,9 +240,8 @@ class CSSToQMLConverter(object):
         """
         return self.etype_map.get(etype, "not reported")
  
-    def origin_event_type(self, origin, emap=None):
+    def origin_event_type(self, origin):
         """Return a proper event_type from a CSS3.0 etype flag stored in an origin"""
-        # TODO: fix namespace/strategy?
         if 'css:etype' in origin:
             etype = origin['css:etype']
             return self.get_event_type(etype)
@@ -246,7 +265,7 @@ class CSSToQMLConverter(object):
         """
         Set event
         """
-        self.event = Dict()
+        #self.event = Dict()
         
         # Allow setting of map at class level by noclobber update
         if 'etype_map' in kwargs:
@@ -304,23 +323,71 @@ class CSSToQMLConverter(object):
         ----
         origin <- origerr [orid] (outer)
         """
+        css_etype = _str(db.get('etype'))
         posted_author = _str(db.get('auth'))
         mode, status = self.get_event_status(posted_author)
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
         
+        #-- Solution Uncertainties ----------------------------------
+        # in CSS the ellipse is projected onto the horizontal plane
+        # using the covariance matrix
+        a = _km2m(db.get('smajax'))
+        b = _km2m(db.get('sminax'))
+        s = db.get('strike')
+        
+        #-- Parameter Uncertainties ---------------------------------
+        if all([a, b, s]):
+            n, e = _get_NE_on_ellipse(a, b, s)
+            lat_u = _m2deg_lat(n)
+            lon_u = _m2deg_lon(e, lat=db.get('lat') or 0.0)
+        else:
+            lat_u = None
+            lon_u = None
+        
+        # There can be multiple uncertainties -- only add if exists 
+        if a is not None:
+            uncertainty = Dict([
+                ('preferredDescription', "horizontal uncertainty"),
+                ('horizontalUncertainty', a),
+                ('maxHorizontalUncertainty', a),
+                ('minHorizontalUncertainty', b),
+                ('azimuthMaxHorizontalUncertainty', s),
+            ])
+            if db.get('conf') is not None:
+                uncertainty['confidenceLevel'] = db.get('conf') * 100.  
+        else:
+            uncertainty = None
+        
         #-- Basic Hypocenter ----------------------------------------
         origin = Dict([
             ('@publicID', self._uri(originID_rid)),
-            ('latitude', Dict(value = db.get('lat'))),
-            ('longitude', Dict(value = db.get('lon'))),
-            ('depth', Dict(value = _km2m(db.get('depth')))),
-            ('time', Dict(value = self._utc(db.get('time')))),
+            ('latitude', _quan([
+                ('value', db.get('lat')),
+                ('uncertainty', lat_u),
+                ])
+            ),
+            ('longitude', _quan([
+                ('value', db.get('lon')),
+                ('uncertainty', lon_u),
+                ])
+            ),
+            ('depth', _quan([
+                ('value', _km2m(db.get('depth'))),
+                ('uncertainty', _km2m(db.get('sdepth'))),
+                ]),
+            ),
+            ('time', _quan([
+                ('value', self._utc(db.get('time'))),
+                ('uncertainty', db.get('stime')),
+                ]),
+            ),
             ('quality' , Dict([
                 ('standardError', db.get('sdobs')),
                 ('usedPhaseCount', db.get('ndef')),
                 ('associatedPhaseCount', db.get('nass')),
                 ]),
             ),
+            ('originUncertainty', uncertainty),
             ('evaluationMode', mode),
             ('evaluationStatus', status),
             ('creationInfo', Dict([
@@ -330,49 +397,8 @@ class CSSToQMLConverter(object):
                 ('version', db.get('orid')),
                 ])
             ),
+            ('css:etype', css_etype),
         ])
-        
-        #-- Solution Uncertainties ----------------------------------
-        # in CSS the ellipse is projected onto the horizontal plane
-        # using the covariance matrix
-        a = _km2m(db.get('smajax'))
-        b = _km2m(db.get('sminax'))
-        s = db.get('strike')
-        dep_u = _km2m(db.get('sdepth'))
-        time_u = db.get('stime')
-        
-        # There can be multiple uncertainties -- only add if exists 
-        uncertainty = Dict([
-            ('preferredDescription', "horizontal uncertainty"),
-            ('horizontalUncertainty', a),
-            ('maxHorizontalUncertainty', a),
-            ('minHorizontalUncertainty', b),
-            ('azimuthMaxHorizontalUncertainty', s),
-        ])
-        if db.get('conf') is not None:
-            uncertainty['confidenceLevel'] = db.get('conf') * 100.  
-
-        if uncertainty['horizontalUncertainty'] is not None:
-            origin['originUncertainty'] = uncertainty
-
-        #-- Parameter Uncertainties ---------------------------------
-        if all([a, b, s]):
-            n, e = _get_NE_on_ellipse(a, b, s)
-            lat_u = _m2deg_lat(n)
-            lon_u = _m2deg_lon(e, lat=origin['latitude']['value'])
-            origin['latitude']['uncertainty'] = lat_u
-            origin['longitude']['uncertainty'] = lon_u
-        if dep_u:
-            origin['depth']['uncertainty'] = dep_u
-        if time_u:
-            origin['time']['uncertainty'] = time_u
-
-        # Save etype per origin due to schema differences...
-        # TODO: add namespace to top node OR use explicitly
-        css_etype = _str(db.get('etype'))
-        #origin[self.nsmap['css']+':etype'] = css_etype
-        origin['css:etype'] = css_etype
-
         return origin
     
     def map_stamag2stationmagnitude(self, db):
@@ -432,7 +458,7 @@ class CSSToQMLConverter(object):
         
         magnitude = Dict([
             ('@publicID', self._uri(netmagID_rid)),
-            ('mag', Dict([
+            ('mag', _quan([
                 ('value', db.get('magnitude')),
                 ('uncertainty', db.get('uncertainty')),
                 ])
@@ -482,7 +508,7 @@ class CSSToQMLConverter(object):
         
         magnitude = Dict([
             ('@publicID', self._uri(originID_rid)),
-            ('mag', Dict(value = db.get(mtype))),
+            ('mag', _quan(value = db.get(mtype))),
             ('type', mtype),
             ('originID', self._uri(originID_rid)),
             ('evaluationStatus', status),
@@ -563,7 +589,7 @@ class CSSToQMLConverter(object):
         
         pick = Dict([
             ('@publicID', self._uri(pickID_rid)),
-            ('time', Dict([
+            ('time', _quan([
                 ('value', self._utc(db.get('time'))),
                 ('uncertainty', db.get('deltim')),
                 ])
@@ -576,9 +602,19 @@ class CSSToQMLConverter(object):
                 ('resourceURI', self._uri(wfID_rid)),
                 ])
             ),
-            ('phaseHint', Dict(code=db.get('iphase'))),
+            ('phaseHint', _dict(code=db.get('iphase'))),
             ('polarity', polarity),
             ('onset', onset),
+            ('backazimuth', _quan([
+                ('value', db.get('azimuth')), 
+                ('uncertainty', db.get('delaz'))
+                ])
+            ),
+            ('horizontalSlowness', _quan([
+                ('value', db.get('slow')), 
+                ('uncertainty', db.get('delslo'))
+                ])
+            ),
             ('creationInfo', Dict([
                 ('creationTime', self._utc(db.get('arrival.lddate') or db.get('lddate'))), 
                 ('agencyID', self.agency), 
@@ -588,8 +624,6 @@ class CSSToQMLConverter(object):
             ),
             ('evaluationMode', pick_mode),
             ('evaluationStatus', pick_status),
-            #('backazimuth', Dict([('value, db.get('azimuth')), ('uncertainty', db.get('delaz'))])),
-            #('horizontalSlowness', Dict([('value', db.get('slow')), ('uncertainty', db.get('delslo'))])),
         ])
         return pick
     
@@ -623,7 +657,7 @@ class CSSToQMLConverter(object):
             db.get('arid') or uuid.uuid4(),
         )
         
-        arr = Dict([
+        arrival = Dict([
             ('@publicID', self._uri(assocID_rid)),
             ('pickID', self._uri(pickID_rid)),
             ('phase', db.get('phase')),
@@ -642,10 +676,10 @@ class CSSToQMLConverter(object):
         ])
 
         # Assign a default weight based on timedef if none in db
-        if arr.get('timeWeight') is None:
-            arr['timeWeight'] = TIMEDEF_WEIGHT.get(css_timedef)
+        if arrival.get('timeWeight') is None:
+            arrival['timeWeight'] = TIMEDEF_WEIGHT.get(css_timedef)
         
-        return arr
+        return arrival
 
     def map_assocarrival2pickarrival(self, db):
         """
@@ -729,7 +763,7 @@ class CSSToQMLConverter(object):
             ),
         ])
 
-        fm = Dict([
+        focal_mechanism = Dict([
             ('@publicID', self._uri(fplaneID_rid)),
             ('triggeringOriginID', self._uri(originID_rid)),
             ('nodalPlanes', nodal_planes),
@@ -742,7 +776,7 @@ class CSSToQMLConverter(object):
                 ])
             ),
         ])
-        return fm
+        return focal_mechanism
     
     # TODO: also do 'moment'???
     def map_moment2focalmech(self, db):
@@ -770,6 +804,7 @@ class CSSToQMLConverter(object):
         """
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
         mtID_rid = "{0}/{1}".format('mt', db.get('mtid') or uuid.uuid4())
+        # Both these are the same resource, use the same ID? or make unique like this?
         mtfmID_rid = "{0}/{1}".format('mt-focalmech', db.get('mtid') or uuid.uuid4())
         
         moment_tensor = Dict([
@@ -831,7 +866,7 @@ class CSSToQMLConverter(object):
             ),
         ])
         
-        fm = Dict([
+        focal_mechanism = Dict([
             ('@publicID', self._uri(mtfmID_rid)),
             ('triggeringOriginID', self._uri(originID_rid)),
             ('nodalPlanes', nodal_planes),
@@ -845,7 +880,7 @@ class CSSToQMLConverter(object):
                 ])
             ),
         ])
-        return fm
+        return focal_mechanism
     
     def convert_origins(self, records):
         """
@@ -893,7 +928,8 @@ class CSSToQMLConverter(object):
         Notes
         =====
         FocalMechanisms can be from first-motion or moment tensor inversions,
-        so the schema can be specified in the function call.
+        the CSS3.0 extensions are denormalized, so you need the schema of the
+        table, which can be specified in the function call.
         """
         if schema == "fplane":
             return [self.map_fplane2focalmech(row) for row in records]
