@@ -447,6 +447,7 @@ class CSSToQMLConverter(object):
         input, e.g. OrderedDict, custom classes, etc.
         """
         author = db.get('auth')
+        mode, status = self.get_event_status(author)
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
         netmagid = "{0}id".format(mtype)
         if db.get(netmagid):
@@ -457,16 +458,12 @@ class CSSToQMLConverter(object):
                 db.get('orid') or uuid.uuid4()
             )
         
-        if author.startswith('orb'):
-            status = "preliminary"
-        else:
-            status = "reviewed"
-        
         magnitude = Dict([
             ('@publicID', self._uri(origmagID_rid)),
             ('mag', _quan(value = db.get(mtype))),
             ('type', mtype),
             ('originID', self._uri(originID_rid)),
+            ('evaluationMode', mode),
             ('evaluationStatus', status),
             ('creationInfo', Dict([
                 ('creationTime', self._utc(db.get('lddate'))), 
