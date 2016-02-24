@@ -9,7 +9,7 @@ from qmlutil import data as metadata
 
 VALIDATION_SCHEMAS = {
     "BED": metadata.QUAKEML_12_RELAXNG,
-    "BED-RT": metadata.QUAKEML_BEDRT_12_RELAXNG,
+    "BED-RT": metadata.QUAKEML_RT_12_RELAXNG,
 }
 
 def validate(f, schema="BED"):
