@@ -208,5 +208,5 @@ def main():
     return q, te, schema
 
 # Run test
-q, te, schema = main()
+#q, te, schema = main()
 

@@ -35,21 +35,20 @@ on the schemas:
 import math
 import datetime
 import uuid
-
 try:
     from collections import OrderedDict as Dict
 except ImportError as e:
     Dict = dict
+
+from qmlutil import ResourceURIGenerator
+
 
 # Namespaces used by the XML serializer
 Q_NAMESPACE ="http://quakeml.org/xmlns/quakeml/1.2"       # xmlns:q
 CATALOG_NAMESPACE = "http://anss.org/xmlns/catalog/0.1"   # xmlns:catalog
 BED_NAMESPACE = "http://quakeml.org/xmlns/bed/1.2"        # xmlns
 BEDRT_NAMESPACE = "http://quakeml.org/xmlns/bed-rt/1.2"   # xmlns
-CSS_NAMESPACE = 'http://www.seismo.unr.edu/schema/css3.0' # xmlns:css
-
-# Time format for string
-RFC3339 = '%Y-%m-%dT%H:%M:%S.%fZ'
+CSS_NAMESPACE = 'http://nvseismolab.org/schema/css3.0'    # xmlns:css
 
 # Default weight to use based on timedef
 TIMEDEF_WEIGHT = dict(d=1.0, n=0.0)
@@ -81,21 +80,6 @@ def _ts(dt):
     Return timestamp from datetime object
     """
     return (dt-datetime.datetime(1970, 01, 01, 00, 00, 00)).total_seconds()
-
-
-def rfc3339(dt):
-    """
-    Format datetime in ISO8601
-    """
-    return dt.strftime(RFC3339)
-    
-
-def timestamp2isostr(timestamp):
-    """Returns the UTC datetime in RFC3339-ISO8601"""
-    try:
-        return rfc3339(_dt(timestamp))
-    except:
-      return None
 
 
 def _str(item):
@@ -163,37 +147,6 @@ def _get_NE_on_ellipse(A, B, strike):
     n = _eval_ellipse(A, B, strike)
     e = _eval_ellipse(A, B, strike-90)
     return n, e
-
-
-class ResourceURIGenerator(object):
-    """
-    Create function to generate URI's for QuakeML
-    """
-    _pattern = r"(smi|quakeml):[\w\d][\w\d\−\.\∗\(\)_~’]{2,}/[\w\d\−\.\∗\(\)_~’][\w\d\−\.\∗\(\)\+\?_~’=,;#/&amp;]∗" 
-    schema = None
-    authority_id = None
-
-    def __init__(self, schema="smi", authority_id="local"):
-        self.schema = schema
-        self.authority_id = authority_id
-
-    def __call__(self, resource_id=None, local_id=None, authority_id=None, schema=None):
-        """
-        Generate an id, given a resource-id and possible local-id, other parts
-        can be overridden here as well
-        """
-        if not resource_id:
-            resource_id = str(uuid.uuid4())
-        schema = schema or self.schema
-        auth_id = authority_id or self.authority_id
-        rid = "{0}:{1}/{2}".format(schema, auth_id, resource_id)
-        if local_id:
-            rid += "#{0}".format(local_id)
-        return rid
-
-    def validate(rid):
-        """Validate"""
-        raise NotImplementedError("Not done yet")
 
 
 class CSSToQMLConverter(object):
@@ -335,20 +288,13 @@ class CSSToQMLConverter(object):
         b = _km2m(db.get('sminax'))
         s = db.get('strike')
         
-        #-- Parameter Uncertainties ---------------------------------
         if all([a, b, s]):
             n, e = _get_NE_on_ellipse(a, b, s)
             lat_u = _m2deg_lat(n)
             lon_u = _m2deg_lon(e, lat=db.get('lat') or 0.0)
-        else:
-            lat_u = None
-            lon_u = None
-        
-        # There can be multiple uncertainties -- only add if exists 
-        if a is not None:
+            
             uncertainty = Dict([
-                ('preferredDescription', "horizontal uncertainty"),
-                ('horizontalUncertainty', a),
+                ('preferredDescription', "uncertainty ellipse"),
                 ('maxHorizontalUncertainty', a),
                 ('minHorizontalUncertainty', b),
                 ('azimuthMaxHorizontalUncertainty', s),
@@ -356,6 +302,8 @@ class CSSToQMLConverter(object):
             if db.get('conf') is not None:
                 uncertainty['confidenceLevel'] = db.get('conf') * 100.  
         else:
+            lat_u = None
+            lon_u = None
             uncertainty = None
         
         #-- Basic Hypocenter ----------------------------------------
@@ -397,6 +345,7 @@ class CSSToQMLConverter(object):
                 ('version', db.get('orid')),
                 ])
             ),
+            ('arrival', []),
             ('css:etype', css_etype),
         ])
         return origin
@@ -499,7 +448,14 @@ class CSSToQMLConverter(object):
         """
         author = db.get('auth')
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
-        origmagID_rid = "{0}/{1}".format('origin-{0}'.format(mtype), db.get('orid') or uuid.uuid4())
+        netmagid = "{0}id".format(mtype)
+        if db.get(netmagid):
+            origmagID_rid = "{0}/{1}".format('netmag', db.get(netmagid))
+        else:
+            origmagID_rid = "{0}/{1}".format(
+                'origin-{0}'.format(mtype), 
+                db.get('orid') or uuid.uuid4()
+            )
         
         if author.startswith('orb'):
             status = "preliminary"
@@ -507,7 +463,7 @@ class CSSToQMLConverter(object):
             status = "reviewed"
         
         magnitude = Dict([
-            ('@publicID', self._uri(originID_rid)),
+            ('@publicID', self._uri(origmagID_rid)),
             ('mag', _quan(value = db.get(mtype))),
             ('type', mtype),
             ('originID', self._uri(originID_rid)),
@@ -599,10 +555,10 @@ class CSSToQMLConverter(object):
                 ('@channelCode', db.get('fchan') or css_chan),
                 ('@networkCode', db.get('snet') or def_net),
                 ('@locationCode', db.get('loc') or ""),
-                ('resourceURI', self._uri(wfID_rid)),
+                ('#text', self._uri(wfID_rid, schema="smi")),  #'resourceURI' in schema
                 ])
             ),
-            ('phaseHint', _dict(code=db.get('iphase'))),
+            ('phaseHint', db.get('iphase')),  #'code' in schema
             ('polarity', polarity),
             ('onset', onset),
             ('backazimuth', _quan([
@@ -733,6 +689,9 @@ class CSSToQMLConverter(object):
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
         fplaneID_rid = "{0}/{1}".format('fplane', db.get('mechid') or uuid.uuid4())
         author_string = ':'.join([db.get('algorithm'), db.get('auth')])
+        
+        # Determine from auth field
+        mode, status = self.get_event_status(_str(db.get('auth')))
 
         nodal_planes = Dict([
             ('nodalPlane1', Dict([
@@ -771,10 +730,12 @@ class CSSToQMLConverter(object):
             ('creationInfo', Dict([
                 ('creationTime', self._utc(db.get('lddate'))), 
                 ('agencyID', self.agency),
-                ('author', db.get('auth')),
+                ('author', author_string),
                 ('version', db.get('mtid')), 
                 ])
             ),
+            ('evaluationMode', mode),
+            ('evaluationStatus', status),
         ])
         return focal_mechanism
     
@@ -804,12 +765,21 @@ class CSSToQMLConverter(object):
         """
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
         mtID_rid = "{0}/{1}".format('mt', db.get('mtid') or uuid.uuid4())
-        # Both these are the same resource, use the same ID? or make unique like this?
-        mtfmID_rid = "{0}/{1}".format('mt-focalmech', db.get('mtid') or uuid.uuid4())
+        
+        # This is wrong in the GS feed, have to map to valid QuakeML enum
+        # the right place for this is Quakeml -> mt table, but do it here
+        # in case no one did on ETL.
+        mode = dict([
+            ('automatic', "automatic"),
+            ('manual', "manual"),
+            ('reviewed', "manual"),
+        ]).get(db.get('rstatus')) # should be EvaluationModeType
+        status = db.get('estatus') # should be EvaluationStatusType
         
         moment_tensor = Dict([
-            ('@publicID', self._uri(mtID_rid)),
-            ('scalarMoment', db.get('scm')),
+            ('@publicID', self._uri(mtID_rid, local_id="tensor")),
+            ('derivedOriginID', self._uri(originID_rid)),
+            ('scalarMoment', _quan(value=db.get('scm'))),
             ('doubleCouple', db.get('pdc')),
             ('tensor', Dict([
                 ('Mrr', Dict(value=db.get('tmrr'))),
@@ -867,7 +837,7 @@ class CSSToQMLConverter(object):
         ])
         
         focal_mechanism = Dict([
-            ('@publicID', self._uri(mtfmID_rid)),
+            ('@publicID', self._uri(mtID_rid, local_id="focalmech")),
             ('triggeringOriginID', self._uri(originID_rid)),
             ('nodalPlanes', nodal_planes),
             ('principalAxes', principal_axes),
@@ -879,6 +849,9 @@ class CSSToQMLConverter(object):
                 ('version', db.get('mtid')), 
                 ])
             ),
+            # These determined from auth?? or weird incorrect mt fields...
+            ('evaluationMode', db.get('rstatus')),
+            ('evaluationStatus', db.get('estatus')),
         ])
         return focal_mechanism
     
