@@ -16,12 +16,8 @@
 import datetime
 import re
 import uuid
-try:
-    from collections import OrderedDict as Dict
-except ImportError as e:
-    Dict = dict
 
-from qmlutil import ResourceURIGenerator, rfc3339, anss_params
+from qmlutil import Dict, Root, ResourceURIGenerator, rfc3339, anss_params
 
 TIMEFMT = '%Y-%m-%dT%H:%M:%S'
 
@@ -294,38 +290,20 @@ class Parser(object):
         return ichi 
 
 
-class IchinoseToQmlConverter(object):
+class IchinoseToQmlConverter(Root):
     """
     Convert Ichinose
     """
-    agency = None
     event = None
     parser = None
-    rid_factory = None
 
     def __init__(self, fh, *args, **kwargs):
         """
         Set event
         """
         self.parser = Parser(fh)
-        
-        for key in kwargs:
-            if hasattr(self, key):
-                setattr(self, key, kwargs[key])
-        
-        if self.rid_factory is None:
-            self.rid_factory = ResourceURIGenerator()
-    
-    def _uri(self, obj=None, *args, **kwargs):
-        """
-        Return unique ResourceIdentifier URI
-        """
-        if obj is None:
-            resource_id = str(uuid.uuid4())
-        else:
-            resource_id = str(obj)
-        return self.rid_factory(resource_id, *args, **kwargs)
-    
+        super(IchinoseToQmlConverter, self).__init__(*args, **kwargs) 
+         
     def get_event(self, anss=False):
         """
         Build an obspy moment tensor focal mech event

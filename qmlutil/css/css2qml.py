@@ -35,20 +35,8 @@ on the schemas:
 import math
 import datetime
 import uuid
-try:
-    from collections import OrderedDict as Dict
-except ImportError as e:
-    Dict = dict
 
-from qmlutil import ResourceURIGenerator, anss_params
-
-
-# Namespaces used by the XML serializer
-Q_NAMESPACE ="http://quakeml.org/xmlns/quakeml/1.2"       # xmlns:q
-CATALOG_NAMESPACE = "http://anss.org/xmlns/catalog/0.1"   # xmlns:catalog
-BED_NAMESPACE = "http://quakeml.org/xmlns/bed/1.2"        # xmlns
-BEDRT_NAMESPACE = "http://quakeml.org/xmlns/bed-rt/1.2"   # xmlns
-#CSS_NAMESPACE = 'http://nvseismolab.org/schema/css3.0'    # xmlns:css
+from qmlutil import Dict, Root, ResourceURIGenerator, anss_params
 
 # Default weight to use based on timedef
 TIMEDEF_WEIGHT = dict(d=1.0, n=0.0)
@@ -161,7 +149,7 @@ def extract_etype(origin):
                     return comm.get('text')
 
             
-class CSSToQMLConverter(object):
+class CSSToQMLConverter(Root):
     """
     Converter to QuakeML schema from CSS3.0 schema
 
@@ -177,24 +165,25 @@ class CSSToQMLConverter(object):
     get_event_type : static class method to convert CSS origin type flag
 
     """
-    #nsmap = {'css': CSS_NAMESPACE} # NS to use for extra css elements/attrib
-    
-    _auth_id = "local"  # default to use if rid_factory is N/A
-    
     etype_map = dict(ETYPE_MAP)
-    rid_factory = None
-    utc_factory = None # function(timestamp: float) 
-    agency  = 'XX'    # agency ID, ususally net code
     automatic_authors = []  # list of authors to mark as automatic
     
-    @property
-    def auth_id(self):
-        """authority-id"""
-        try:
-            return self.rid_factory.authority_id or self._auth_id
-        except:
-            return self._auth_id
-
+    def __init__(self, *args, **kwargs):
+        """
+        Set event
+        """
+        #self.event = Dict()
+        
+        # Allow setting of map at class level by noclobber update
+        if 'etype_map' in kwargs:
+            etype_map = kwargs.pop('etype_map')
+            _etypemap = dict(self.etype_map)
+            _etypemap.update(etype_map)
+            self.etype_map = _etypemap
+        
+        # TODO: inherit from Root class and call super for this stuff
+        super(CSSToQMLConverter, self).__init__(*args, **kwargs)
+    
     def get_event_type(self, etype):
         """
         Map a CSS3.0 etype origin flag to a QuakeML event type
@@ -222,48 +211,6 @@ class CSSToQMLConverter(object):
         mode = "manual"
         status = "reviewed"
         return mode, status
-
-    def __init__(self, *args, **kwargs):
-        """
-        Set event
-        """
-        #self.event = Dict()
-        
-        # Allow setting of map at class level by noclobber update
-        if 'etype_map' in kwargs:
-            etype_map = kwargs.pop('etype_map')
-            _etypemap = dict(self.etype_map)
-            _etypemap.update(etype_map)
-            self.etype_map = _etypemap
-        
-        # TODO: inherit from Root class and call super for this stuff
-        for key in kwargs:
-            if hasattr(self, key):
-                setattr(self, key, kwargs[key])
-        
-        if self.rid_factory is None:
-            self.rid_factory = ResourceURIGenerator()
-    
-    def _uri(self, obj=None, *args, **kwargs):
-        """
-        Return unique ResourceIdentifier URI
-        """
-        if obj is None:
-            resource_id = str(uuid.uuid4())
-        else:
-            resource_id = str(obj)
-        return self.rid_factory(resource_id, *args, **kwargs)
-    
-    def _utc(self, timestamp):
-        """
-        Return a time representation given seconds timestamp float
-
-        (default is datetime.datetime object)
-        """
-        if self.utc_factory is None:
-            return _dt(timestamp)
-        else:
-            return self.utc_factory(timestamp)
 
     def map_origin2origin(self, db):
         """
@@ -964,51 +911,7 @@ class CSSToQMLConverter(object):
         # Add the ANSS NS parameters automatically
         #
         if anss:
-            #_agid = self.agency.lower()
-            #event['@catalog:eventid'] = "{0:08d}".format(evid)
-            #event['@catalog:dataid'] = "{0}{1:08d}".format(_agid, evid)
-            #event['@catalog:eventsource'] = _agid
-            #event['@catalog:datasource'] = _agid
             cat_event_attr = anss_params(self.agency, evid)
             event.update(cat_event_attr)
         return event
-
-    def event_parameters(self, **kwargs):
-        """
-        Create an EventParameters object
-
-        Should be valid for BED or BED-RT
-        """
-        allowed = ('event', 'origin', 'magnitude', 'stationMagnitude', 
-            'focalMechanism', 'reading', 'pick', 'amplitude', 'description',
-            'comment', 'creationInfo')
-        
-        dtnow = datetime.datetime.utcnow()
-        ustamp = int(_ts(dtnow) * 10**6)
-        catalogID_rid = "{0}/{1}".format('catalog', ustamp)
-        
-        eventParameters = Dict([
-            ('@publicID', self._uri(catalogID_rid)),
-            ('creationInfo', Dict([
-                ('creationTime', self._utc(_ts(dtnow))),
-                ('agencyID', self.agency),
-                ('version', str(ustamp)),
-                ])
-            ),
-        ])
-        for k in kwargs:
-            if k in allowed:
-                eventParameters[k] = kwargs[k]
-        return eventParameters
-    
-    # TODO: save nsmap in attributes, build as generator/mapped fxn
-    def qml(self, event_parameters, default_namespace=BED_NAMESPACE):
-        qml = Dict([
-            ('@xmlns:q', Q_NAMESPACE),
-            ('@xmlns', default_namespace),
-            #('@xmlns:css', CSS_NAMESPACE),
-            ('@xmlns:catalog', CATALOG_NAMESPACE),
-            ('eventParameters', event_parameters),
-        ])
-        return Dict({'q:quakeml': qml})
 

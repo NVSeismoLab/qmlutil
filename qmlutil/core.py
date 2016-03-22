@@ -136,15 +136,19 @@ def get_preferred(prefid, items):
     
 class Root(object):
     """
-    Test Generice QuakeML root
+    Generic QuakeML root
+
+    Common methods for returning basic and high-level QuakeML elements as
+    python dicts.
 
     Methods should return dicts of quakeml elements
     """
     _auth_id = "local"  # default to use if rid_factory is N/A
     
-    rid_factory = None
-    utc_factory = None # function(timestamp: float) 
-    agency  = 'XX'    # agency ID, ususally net code
+    agency  = 'XX'      # agency ID, ususally net code
+    doi = None          # DOI without scheme
+    rid_factory = None  # ResourceURIGenerator function
+    utc_factory = None  # function(timestamp: float) 
     
     @property
     def auth_id(self):
@@ -186,6 +190,9 @@ class Root(object):
     def event_parameters(self, **kwargs):
         """
         Create an EventParameters object
+        
+        Return dict of eventParameters element given arrays of high-level
+        elements as keywords i.e. event=[ev1, ev2, ev3].
 
         Should be valid for BED or BED-RT
         """
@@ -213,6 +220,9 @@ class Root(object):
         
     # TODO: save nsmap in attributes, build as generator/mapped fxn
     def qml(self, event_parameters, default_namespace=BED_NAMESPACE):
+        """
+        Return dict of QuakeML root element given eventParameters dict
+        """
         qml = Dict([
             ('@xmlns:q', Q_NAMESPACE),
             ('@xmlns', default_namespace),
@@ -221,4 +231,16 @@ class Root(object):
         ])
         return Dict({'q:quakeml': qml})
 
+    def event2root(self, ev):
+        """
+        Convenience method to add event to parameters and root
+        Also appends evid to eventParameters publicID
+        """
+        event_id = ev.get('@publicID', '').split('/', 1)[-1].replace('/', '=')
+        catalog = self.event_parameters(event=[ev])
+        catalog['@publicID'] += "#{0}".format(event_id)
+        if self.doi:
+            catalog['creationInfo']['agencyURI'] = "smi:{0}".format(self.doi)
+        qmlroot = self.qml(event_parameters=catalog)
+        return qmlroot
 
