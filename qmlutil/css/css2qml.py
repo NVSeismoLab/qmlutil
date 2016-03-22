@@ -40,7 +40,7 @@ try:
 except ImportError as e:
     Dict = dict
 
-from qmlutil import ResourceURIGenerator
+from qmlutil import ResourceURIGenerator, anss_params
 
 
 # Namespaces used by the XML serializer
@@ -48,7 +48,7 @@ Q_NAMESPACE ="http://quakeml.org/xmlns/quakeml/1.2"       # xmlns:q
 CATALOG_NAMESPACE = "http://anss.org/xmlns/catalog/0.1"   # xmlns:catalog
 BED_NAMESPACE = "http://quakeml.org/xmlns/bed/1.2"        # xmlns
 BEDRT_NAMESPACE = "http://quakeml.org/xmlns/bed-rt/1.2"   # xmlns
-CSS_NAMESPACE = 'http://nvseismolab.org/schema/css3.0'    # xmlns:css
+#CSS_NAMESPACE = 'http://nvseismolab.org/schema/css3.0'    # xmlns:css
 
 # Default weight to use based on timedef
 TIMEDEF_WEIGHT = dict(d=1.0, n=0.0)
@@ -149,6 +149,18 @@ def _get_NE_on_ellipse(A, B, strike):
     return n, e
 
 
+def extract_etype(origin):
+    """Return a CSS3.0 etype flag stored in an origin"""
+    if 'css:etype' in origin:
+        return origin['css:etype']
+    else:
+        if origin.get('comment'):
+            for comm in origin.get('comment'):
+                # This will throw error if comment is a dict not list: TODO: check?
+                if comm.get('@id','').endswith('etype'):
+                    return comm.get('text')
+
+            
 class CSSToQMLConverter(object):
     """
     Converter to QuakeML schema from CSS3.0 schema
@@ -195,11 +207,8 @@ class CSSToQMLConverter(object):
  
     def origin_event_type(self, origin):
         """Return a proper event_type from a CSS3.0 etype flag stored in an origin"""
-        if 'css:etype' in origin:
-            etype = origin['css:etype']
-            return self.get_event_type(etype)
-        else:
-            return "not reported"
+        etype = extract_etype(origin)
+        return self.get_event_type(etype)
     
     def get_event_status(self, posted_author):
         """
@@ -227,6 +236,7 @@ class CSSToQMLConverter(object):
             _etypemap.update(etype_map)
             self.etype_map = _etypemap
         
+        # TODO: inherit from Root class and call super for this stuff
         for key in kwargs:
             if hasattr(self, key):
                 setattr(self, key, kwargs[key])
@@ -345,8 +355,14 @@ class CSSToQMLConverter(object):
                 ('version', db.get('orid')),
                 ])
             ),
+            ('comment', [
+                Dict([
+                    ('@id', self._uri(originID_rid, local_id="etype")),
+                    ('text', css_etype),
+                ]),
+            ]),
             ('arrival', []),
-            ('css:etype', css_etype),
+            #('css:etype', css_etype),
         ])
         return origin
     
@@ -449,17 +465,18 @@ class CSSToQMLConverter(object):
         author = db.get('auth')
         mode, status = self.get_event_status(author)
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
+
+        # If foreign key to netmag table exists, use it as a unique id, 
+        # otherwise unique id is unique origin + local field
         netmagid = "{0}id".format(mtype)
         if db.get(netmagid):
             origmagID_rid = "{0}/{1}".format('netmag', db.get(netmagid))
+            public_uri = self._uri(origmagID_rid)
         else:
-            origmagID_rid = "{0}/{1}".format(
-                'origin-{0}'.format(mtype), 
-                db.get('orid') or uuid.uuid4()
-            )
-        
+            public_uri = self._uri(originID_rid, local_id=mtype)
+
         magnitude = Dict([
-            ('@publicID', self._uri(origmagID_rid)),
+            ('@publicID', public_uri),
             ('mag', _quan(value = db.get(mtype))),
             ('type', mtype),
             ('originID', self._uri(originID_rid)),
@@ -625,7 +642,7 @@ class CSSToQMLConverter(object):
                 ('version', db.get('arid')),
                 ])
             ),
-            ('css:timedef', css_timedef),
+            #('css:timedef', css_timedef),
         ])
 
         # Assign a default weight based on timedef if none in db
@@ -925,7 +942,7 @@ class CSSToQMLConverter(object):
         (will also accept a CSS origin row dict)
         """
         evid = db.get('evid')
-        lddate = db.get('lddate')
+        lddate = db.get('lddate') or _ts(datetime.datetime.utcnow())
         prefor = db.get('prefor') or db.get('orid')
         eventID_rid = "{0}/{1}".format('event', evid)
         
@@ -947,11 +964,13 @@ class CSSToQMLConverter(object):
         # Add the ANSS NS parameters automatically
         #
         if anss:
-            _agid = self.agency.lower()
-            event['@catalog:eventid'] = "{0:08d}".format(evid)
-            event['@catalog:dataid'] = "{0}{1:08d}".format(_agid, evid)
-            event['@catalog:eventsource'] = _agid
-            event['@catalog:datasource'] = _agid
+            #_agid = self.agency.lower()
+            #event['@catalog:eventid'] = "{0:08d}".format(evid)
+            #event['@catalog:dataid'] = "{0}{1:08d}".format(_agid, evid)
+            #event['@catalog:eventsource'] = _agid
+            #event['@catalog:datasource'] = _agid
+            cat_event_attr = anss_params(self.agency, evid)
+            event.update(cat_event_attr)
         return event
 
     def event_parameters(self, **kwargs):
@@ -987,7 +1006,7 @@ class CSSToQMLConverter(object):
         qml = Dict([
             ('@xmlns:q', Q_NAMESPACE),
             ('@xmlns', default_namespace),
-            ('@xmlns:css', CSS_NAMESPACE),
+            #('@xmlns:css', CSS_NAMESPACE),
             ('@xmlns:catalog', CATALOG_NAMESPACE),
             ('eventParameters', event_parameters),
         ])

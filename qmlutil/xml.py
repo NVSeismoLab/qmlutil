@@ -171,6 +171,61 @@ class TypeExtractor(object):
         return self.entype(self.qml)
 
 
+class Rounder(object):
+    """
+    Rounder is an xmltodict preprocessor function for generating NSL QuakeML
+
+    Notes
+    -----
+    Rounds specified values for objects in an Event because the Client doesn't
+    understand precision in computing vs. precision in measurement, or the
+    general need for reproducibility in science.
+    """
+    @staticmethod
+    def _round(dict_, k, n):
+        """
+        Round a number given a dict, a key, and # of places.
+        """
+        v = dict_.get(k)
+        if v is not None:
+            v = round(v, n)
+            dict_[k] = v
+    
+    def __init__(self):
+        pass
+
+    def __call__(self, k, v):
+        # Case of integer attribute
+        if k == "nodalPlanes" and v.get("@preferredPlane"):
+            v['@preferredPlane'] = str(v['@preferredPlane'])
+        
+        # Don't serialize empty stuff
+        if v is None:
+            return None
+        
+        # Round stuff
+        if k == "depth":
+            self._round(v, 'value', -2)
+            self._round(v, 'uncertainty', -2)
+            # TODO: lowerUncertainty, upperUncertainty, confidenceLevel??
+        elif k == "latitude":
+            self._round(v, 'uncertainty', 4)
+        elif k == "longitude":
+            self._round(v, 'uncertainty', 4)
+        elif k == "time":
+            self._round(v, 'uncertainty', 6)
+        elif k == "time":
+            self._round(v, 'uncertainty', 6)
+        elif k == "originUncertainty":
+            self._round(v, 'horizontalUncertainty', -1)
+            self._round(v, 'minHorizontalUncertainty', -1)
+            self._round(v, 'maxHorizontalUncertainty', -1)
+        elif k == "mag":
+            self._round(v, 'value', 1)
+            self._round(v, 'uncertainty', 2)
+        return k, v
+            
+
 def ignore_null(k, v):
     """
     Preprocessor for xmltodict.unpasre that ignores keys with None value

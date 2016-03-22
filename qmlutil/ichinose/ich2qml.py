@@ -21,7 +21,7 @@ try:
 except ImportError as e:
     Dict = dict
 
-from qmlutil import ResourceURIGenerator, rfc3339
+from qmlutil import ResourceURIGenerator, rfc3339, anss_params
 
 TIMEFMT = '%Y-%m-%dT%H:%M:%S'
 
@@ -298,6 +298,7 @@ class IchinoseToQmlConverter(object):
     """
     Convert Ichinose
     """
+    agency = None
     event = None
     parser = None
     rid_factory = None
@@ -325,7 +326,7 @@ class IchinoseToQmlConverter(object):
             resource_id = str(obj)
         return self.rid_factory(resource_id, *args, **kwargs)
     
-    def get_event(self):
+    def get_event(self, anss=False):
         """
         Build an obspy moment tensor focal mech event
 
@@ -350,7 +351,7 @@ class IchinoseToQmlConverter(object):
         evid = ichi.get('evid')
         orid = ichi.get('orid')
         dt = ichi.get('creation_time') or datetime.datetime.utcnow()
-        ustamp = int((dt-datetime.datetime(1970, 01, 01, 00, 00, 00)).total_seconds() * 10**6)
+        ustamp = int((dt-datetime.datetime(1970, 01, 01, 00, 00, 00)).total_seconds())
         vers = "{0}-{1}-{2}".format(evid, orid, ustamp)
         ichiID_rid = "{0}/{1}".format('ichinose', vers) # TODO: format/errcheck
         originID_rid = "{0}/{1}".format('origin', orid or uuid.uuid4())
@@ -405,6 +406,7 @@ class IchinoseToQmlConverter(object):
             ('tensor', ichi.get('tensor')),
             ('category', "regional"),
             ('dataUsed', Dict([
+                ('waveType', "combined"),
                 ('stationCount', ichi.get('data_used_station_count')),
                 ])
             ),
@@ -443,12 +445,16 @@ class IchinoseToQmlConverter(object):
                 ])
             ),
         ])
+        if anss:
+            event.update(anss_params(self.agency, evid))
         return event
         
 
-def mt2event(filehandle, rid_factory=None):
+def mt2event(filehandle, rid_factory=None, agency=None, anss=False):
     """
     Return an Event from an Ichinose MT text file
     """
-    return IchinoseToQmlConverter(filehandle, rid_factory=rid_factory).get_event()
+    return IchinoseToQmlConverter(filehandle,
+        rid_factory=rid_factory, agency=agency).get_event(anss=anss)
+
 
