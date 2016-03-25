@@ -34,3 +34,12 @@ def validate(f, schema="BED"):
     is_valid = rng.validate(qml)
     return is_valid
 
+
+def main():
+    import sys
+    filename = sys.argv[1]
+    ok = validate(filename)
+    print "{0} is valid?: {1}".format(filename, ok)
+    sys.exit(0)
+
+
