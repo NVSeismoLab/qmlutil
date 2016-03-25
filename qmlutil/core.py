@@ -133,6 +133,22 @@ def get_preferred(prefid, items):
         if it.get('@publicID') == prefid:
             return it
 
+
+def station_count(arrivals, picks, used=False):
+    """Return a station count"""
+    if used:
+        ids = [a['pickID'] for a in arrivals if 'pickID' in a and
+            a.get('timeWeight', 0) > 0]
+    else:
+        ids = [a['pickID'] for a in arrivals if 'pickID' in a]
+    stations = set()
+    for i in ids:
+        p = get_preferred(i, picks)
+        w = p.get('waveformID')
+        if w:
+            stations.add("{0}_{1}".format(w['@networkCode'], w['@stationCode']))
+    return len(stations)
+
     
 class Root(object):
     """

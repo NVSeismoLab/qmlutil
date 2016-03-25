@@ -10,7 +10,7 @@ from curds2.dbapi2 import connect
 from curds2.rows import OrderedDictRow
 
 from qmlutil import (ResourceURIGenerator, CSSToQMLConverter, dumps,
-        ignore_null, timestamp2isostr, find_preferred_mag)
+        ignore_null, timestamp2isostr, find_preferred_mag, station_count)
 
 
 class DatabaseConverter(object):
@@ -188,6 +188,12 @@ class DatabaseConverter(object):
                 except StandardError as e:
                     pass # log no origin
                 # TODO: more stuff -- derive from arrivals, like stationCount, etc
+                for o in event.get('origin', []):
+                    try:
+                        o['quality']['usedStationCount'] = station_count(o.get('arrival'), _picks, used=True)
+                        o['quality']['associatedStationCount'] = station_count(o.get('arrival'), _picks)
+                    except StandardError as e:
+                        pass
         if focalMechanism:
             event['focalMechanism'] = self.get_mts(orid) + self.get_focalmechs(orid)
         return event
