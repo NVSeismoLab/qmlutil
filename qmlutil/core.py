@@ -149,6 +149,31 @@ def station_count(arrivals, picks, used=False):
             stations.add("{0}_{1}".format(w['@networkCode'], w['@stationCode']))
     return len(stations)
 
+
+def get_quality_from_arrival(arrivals):
+    """
+    Get OriginQuality data calculated from Origin Arrival info
+    
+    NOTE: Only works for station counts if azimuths/distances are available
+    """
+    azimuths =  {a['azimuth'] for a in arrivals}
+    distances = {a['distance'] for a in arrivals}
+    used_azis = {a['azimuth'] for a in arrivals if a.get('timeWeight',
+        0) > 0 }
+    azi = list(azimuths)
+    azi.sort()
+    azi1 = list(azi)
+    azi1.append(azi1.pop(0)+360)  # roll
+    gaps = [azi1[n] - azi[n] for n in range(len(azi1))]
+    quality = Dict([
+        ('usedStationCount', len(used_azis)),
+        ('associatedStationCount', len(azimuths)),
+        ('minimumDistance', min(distances)),
+        ('maximumDistance', max(distances)),
+        ('azimuthalGap', max(gaps)),
+    ])
+    return quality
+
     
 class Root(object):
     """

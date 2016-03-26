@@ -13,7 +13,7 @@ when that doesn't happen.
 """
 from qmlutil.core import (Root, ResourceURIGenerator, timestamp2isostr,
     rfc3339, find_preferred_mag, get_preferred, anss_params, Dict,
-    station_count,)
+    station_count, get_quality_from_arrival)
 from qmlutil.css import CSSToQMLConverter, extract_etype
 from qmlutil.ichinose import IchinoseToQmlConverter, mt2event
 from qmlutil.xml import dumps, ignore_null, Rounder
