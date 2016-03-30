@@ -177,8 +177,6 @@ class DatabaseConverter(object):
             if len(_origins) < 1:
                 raise ValueError("No origins for ORID: {0}".format(orid))
             event['type'] = self.converter.origin_event_type(_origins[0])
-            if event['type'] == "not reported" and _origins[0]['evaluationMode'] == "automatic":
-                event['type'] = "earthquake"
             event['origin'] = _origins
         if magnitude:
             event['magnitude'] = self.get_magnitudes(orid)
