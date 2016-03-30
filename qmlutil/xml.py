@@ -199,6 +199,10 @@ class Rounder(object):
         if k == "nodalPlanes" and v.get("@preferredPlane"):
             v['@preferredPlane'] = str(v['@preferredPlane'])
         
+        # USGS can't handle ID in content yet
+        if k == "waveformID":
+            devnull = v.pop('#text')
+
         # Don't serialize empty stuff
         if v is None:
             return None
