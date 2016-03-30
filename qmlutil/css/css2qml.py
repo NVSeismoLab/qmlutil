@@ -582,7 +582,7 @@ class CSSToQMLConverter(Root):
             ('distance', db.get('delta')),
             ('timeResidual', db.get('timeres')),
             ('timeWeight', db.get('wgt')),
-            ('earthModelID', self._uri(vmodelID_rid, authority_id="local", schema="smi")),
+            ('earthModelID', self._uri(vmodelID_rid, schema="smi")),
             ('creationInfo', Dict([
                 ('creationTime', self._utc(db.get('lddate'))),
                 ('agencyID', self.agency),
