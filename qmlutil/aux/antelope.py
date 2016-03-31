@@ -238,6 +238,7 @@ class Db2Quakeml(object):
 
     """
     authority_id = "local"
+    automatic_authors = []
     agency_id = "XX"
     doi = None
     etype_map = {}
@@ -268,6 +269,7 @@ class Db2Quakeml(object):
             rid_factory=ResourceURIGenerator("quakeml", self.authority_id), 
             utc_factory=timestamp2isostr,
             etype_map=self.etype_map,
+            automatic_authors=self.automatic_authors,
         )
     
     def get_deleted_event(self, dsn, orid=None, evid=None, anss=False, **kwargs):
