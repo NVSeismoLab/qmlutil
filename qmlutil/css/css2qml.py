@@ -409,7 +409,7 @@ class CSSToQMLConverter(Root):
         Any object that supports the dict 'get' method can be passed as
         input, e.g. OrderedDict, custom classes, etc.
         """
-        author = db.get('auth')
+        author = _str(db.get('auth'))
         mode, status = self.get_event_status(author)
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
 
