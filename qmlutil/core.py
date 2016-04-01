@@ -285,3 +285,4 @@ class Root(object):
         qmlroot = self.qml(event_parameters=catalog)
         return qmlroot
 
+

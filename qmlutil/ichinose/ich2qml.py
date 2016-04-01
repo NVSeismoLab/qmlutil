@@ -378,9 +378,13 @@ class IchinoseToQmlConverter(Root):
         
         moment_tensor = Dict([
             ('@publicID', self._uri(ichiID_rid, local_id="mt")),
-            ('derivedOriginID', self._uri(ichiID_rid, local_id="origin")),
+            ('derivedOriginID', origin.get('@publicID')),
+            ('momentMagnitudeID', magnitude.get('@publicID')),
             ('scalarMoment', Dict(value=ichi.get('scalar_moment'))),
             ('doubleCouple', ichi.get('double_couple')),
+            ('clvd', ichi.get('clvd')),
+            ('variance', ichi.get('variance')),
+            ('varianceReduction', ichi.get('variance_reduction')),
             ('tensor', ichi.get('tensor')),
             ('category', "regional"),
             ('dataUsed', Dict([
