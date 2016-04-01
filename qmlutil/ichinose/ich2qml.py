@@ -358,7 +358,7 @@ class IchinoseToQmlConverter(Root):
             ('evaluationStatus', ichi.get('status')),
             ('creationInfo', Dict([
                 ('creationTime', _dt2str(ichi.get('creation_time'))),
-                ('version', vers),
+                ('version', str(orid)),
                 ])
             ),
         ])
