@@ -5,13 +5,12 @@ qmlutil.aux.antelope
 Utillites for extracting data from Antelope -- 3rd party libs required
 """
 import math
+import logging
 
 from curds2.dbapi2 import connect
 from curds2.rows import OrderedDictRow
 
-from qmlutil import (ResourceURIGenerator, CSSToQMLConverter, dumps,
-        ignore_null, timestamp2isostr, find_preferred_mag, station_count,
-        get_quality_from_arrival,)
+import qmlutil as qml
 
 
 class DatabaseConverter(object):
@@ -192,7 +191,7 @@ class DatabaseConverter(object):
                 for o in event.get('origin', []):
                     try:
                         #o['quality'] = in case none yet???
-                        o.get('quality', {}).update(get_quality_from_arrival(o['arrival']))
+                        o.get('quality', {}).update(qml.get_quality_from_arrival(o['arrival']))
                     except StandardError as e:
                         pass
         if focalMechanism:
@@ -244,6 +243,8 @@ class Db2Quakeml(object):
     etype_map = {}
     placesdb = None
     _prefmags = []
+    
+    logger = logging.getLogger()
 
     @property
     def preferred_magtypes(self):
@@ -264,10 +265,10 @@ class Db2Quakeml(object):
                 setattr(self, k, v)
 
         # Make Converter
-        self._conv = CSSToQMLConverter(
+        self._conv = qml.CSSToQMLConverter(
             agency=self.agency_id, 
-            rid_factory=ResourceURIGenerator("quakeml", self.authority_id), 
-            utc_factory=timestamp2isostr,
+            rid_factory=qml.ResourceURIGenerator("quakeml", self.authority_id), 
+            utc_factory=qml.timestamp2isostr,
             etype_map=self.etype_map,
             automatic_authors=self.automatic_authors,
         )
@@ -316,12 +317,12 @@ class Db2Quakeml(object):
         #
         try:
             ev['preferredOriginID'] = ev['origin'][0]['@publicID']
-            ev['preferredMagnitudeID'] = find_preferred_mag(ev['magnitude'][::-1],
+            ev['preferredMagnitudeID'] = qml.find_preferred_mag(ev['magnitude'][::-1],
                     self.preferred_magtypes)
             if ev.get('focalMechanism'):
                 ev['preferredFocalMechanismID'] = ev['focalMechanism'][0]['@publicID']
         except Exception as e:
-            pass
+            self.logger.exception(e)
 
         #
         # Try the nearest places thing...
@@ -329,10 +330,9 @@ class Db2Quakeml(object):
         try:
             orig = ev['origin'][0]
             ncd = get_nearest_place(self.placesdb, (orig['longitude']['value'], orig['latitude']['value']))
-            ev['description'] = conv.description(ncd)
+            ev['description'] = self._conv.description(ncd)
         except Exception as e:
-            pass
-
+            self.logger.exception(e)
         return ev
 
     def event2root(self, ev):
