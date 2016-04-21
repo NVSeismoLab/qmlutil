@@ -209,8 +209,8 @@ class Rounder(object):
         # Caveat to that is, have to enforce QuakeML rules:
         #
         # arrival: must have phase
-        if k == "arrival" and v.get('phase') is None:
-            return None
+        if k == "arrival" and isinstance(v, list):
+            v = [p for p in v if p.get('phase') is not None]
 
         # Round stuff TODO: move to decorator/method
         if k == "depth":
