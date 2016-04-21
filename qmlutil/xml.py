@@ -206,8 +206,13 @@ class Rounder(object):
         # Don't serialize empty stuff
         if v is None:
             return None
-        
-        # Round stuff
+        # Caveat to that is, have to enforce QuakeML rules:
+        #
+        # arrival: must have phase
+        if k == "arrival" and v.get('phase') is None:
+            return None
+
+        # Round stuff TODO: move to decorator/method
         if k == "depth":
             self._round(v, 'value', -2)
             self._round(v, 'uncertainty', -2)
