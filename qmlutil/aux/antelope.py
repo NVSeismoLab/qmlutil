@@ -48,6 +48,17 @@ class DatabaseConverter(object):
         if rec:
             ev = curs.fetchone()
             return self.converter.map_event(ev, anss=anss)
+    
+    def get_event_from_origin(self, orid=None, anss=False):
+        """
+        Get event from origin table (in case no event/prefor)
+        """
+        cmd = ['dbopen origin', 'dbsubset orid=={0}'.format(orid)]
+        curs = self.connection.cursor()
+        rec = curs.execute('process', [cmd])
+        if rec:
+            ev = curs.fetchone()
+            return self.converter.map_event(ev, anss=anss)
 
     def get_focalmechs(self, orid=None):
         """
@@ -170,6 +181,9 @@ class DatabaseConverter(object):
         Extract a QML Event from CSS database given an ORID
         """
         event = self.get_event(orid, anss=anss)
+        if not event:
+            event = self.get_event_from_origin(orid, anss=anss)
+
         # Should return one origin (given one ORID) 
         if origin:
             _origins = self.get_origins(orid)
