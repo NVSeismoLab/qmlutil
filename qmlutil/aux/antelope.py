@@ -194,9 +194,10 @@ class DatabaseConverter(object):
         if magnitude:
             event['magnitude'] = self.get_magnitudes(orid)
         if pick:
-            _picks, _arrivals = self.get_phases(orid)
-            event['pick'] = _picks
-            if origin:
+            picks_arrivals = self.get_phases(orid)
+            if origin and picks_arrivals:
+                _picks, _arrivals = picks_arrivals
+                event['pick'] = _picks
                 try:
                     event['origin'][0]['arrival'] = _arrivals
                 except StandardError as e:
