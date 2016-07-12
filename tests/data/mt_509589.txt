@@ -1,0 +1,103 @@
+<pre style="font-family:Monospace;font-size:12pt;">
+REVIEWED BY NSL STAFF
+
+Event ID:509589
+Origin ID:1238625
+Algorithm: Ichinose (2003) Long Period, Regional-Distance Waves
+Seismic Moment Tensor Solution
+
+2015/09/08 (251) 02:15:21.00 38.6488 -118.8064 1328625
+	Depth =   8.0 (km)
+	Mw    =  3.95
+	Mo    =  1.06x10^22 (dyne x cm)
+
+	Percent Double Couple =  96 %
+	Percent CLVD          =   4 %
+	no ISO calculated
+	Epsilon=-0.02
+	 Percent Variance Reduction =  84.49 %
+	 Total Fit                  =  17.87 
+	Major Double Couple
+		            strike dip   rake
+		Nodal Plane 1:  68  70  -10
+		Nodal Plane 2: 162  81 -159
+
+	DEVIATORIC MOMENT TENSOR
+
+	Moment Tensor Elements: Spherical Coordinates
+		Mrr= -0.13 Mtt= -0.56 Mff=  0.69
+		Mrt= -0.25 Mrf=  0.28 Mtf=  0.75 EXP=22
+
+
+	Moment Tensor Elements: Cartesian Coordinates
+		-0.56 -0.75 -0.25
+		-0.75  0.69 -0.28
+		-0.25 -0.28 -0.13
+
+	Eigenvalues:
+		T-axis eigenvalue=  1.07
+		N-axis eigenvalue= -0.02
+		P-axis eigenvalue= -1.05
+
+	Eigenvalues and eigenvectors of the Major Double Couple:
+		T-axis ev= 1.07 trend=294 plunge=7
+		N-axis ev= 0.00 trend=185 plunge=67
+		P-axis ev=-1.07 trend=27 plunge=21
+
+	Maximum Azmuithal Gap=108 Distance to Nearest Station= 75.7 (km)
+
+	Number of Stations (D=Displacement/V=Velocity) Used=9 (defining only)
+		
+	 KVN.NN.D PNT.NN.D PAH.NN.D CTC.NN.D
+	 LCH.NN.D BMN.LB.D SUTB.BK.D BDM.BK.D
+	 R11A.TA.D
+
+
+              ##---------------                             
+          ######-------------   ---                         
+        #########------------ P -----                       
+      ###########------------   -------                     
+     ############-----------------------                    
+    ##############-----------------------                   
+   ###############-------------------------                 
+ T ###############------------------------#                 
+   ################---------------------####                
+ ##################--------------------#####                
+ ###################-----------------########               
+ ###################--------------###########               
+ ####################----------##############               
+ #####################------#################               
+ #####################--####################                
+ ###########################################                
+  ################----#####################                 
+   --------------------####################                 
+   ---------------------##################                  
+     --------------------################                   
+      -------------------##############                     
+        ------------------###########                       
+          -----------------########                         
+              ---------------###                            
+                                                            
+
+
+All Stations defining and nondefining: 
+Station.Net 	Def 	Distance 	Azi    	Bazi  	lo-f 	hi-f vmodel
+            	    	(km)     	(deg)  	(deg) 	(Hz) 	(Hz)    
+KVN.NN (D) 	Y 	    75.7  	 54  	234  	0.020 	0.080 KVN.NN.wus.glib
+PNT.NN (D) 	Y 	    84.4  	306  	125  	0.020 	0.080 PNT.NN.wus.glib
+PAH.NN (D) 	Y 	   128.2  	337  	157  	0.020 	0.080 PAH.NN.wus.glib
+CTC.NN (D) 	Y 	   130.3  	299  	118  	0.020 	0.080 CTC.NN.wus.glib
+LCH.NN (D) 	Y 	   187.4  	147  	328  	0.020 	0.080 LCH.NN.wus.glib
+BMN.LB (D) 	Y 	   240.1  	 34  	215  	0.020 	0.080 BMN.LB.wus.glib
+SUTB.BK (D) 	Y 	   265.8  	285  	103  	0.020 	0.080 SUTB.BK.wus.glib
+BDM.BK (D) 	Y 	   278.2  	255  	 73  	0.020 	0.080 BDM.BK.wus.glib
+R11A.TA (D) 	Y 	   281.6  	 96  	278  	0.020 	0.080 R11A.TA.wus.glib
+
+ (V)-velocity (D)-Displacement
+
+Author: www-data
+Date: 2015/09/08 02:55:46
+
+mtinv Version 2.1_DEVEL OCT2008
+
+</pre>

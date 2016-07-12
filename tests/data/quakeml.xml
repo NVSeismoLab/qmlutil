@@ -1,0 +1,1915 @@
+<?xml version='1.0' encoding='utf-8'?>
+<q:quakeml xmlns:q="http://quakeml.org/xmlns/quakeml/1.2" xmlns:catalog="http://anss.org/xmlns/catalog/0.1" xmlns:css="http://www.seismo.unr.edu/schema/css3.0" xmlns="http://quakeml.org/xmlns/bed/1.2">
+  <eventParameters publicID="quakeml:www.seismo.unr.edu/Catalog/520476">
+    <creationInfo>
+      <agencyID>NN</agencyID>
+      <creationTime>2015-11-27T14:48:24.459475Z</creationTime>
+      <version>520476</version>
+    </creationInfo>
+    <event publicID="quakeml:www.seismo.unr.edu/Events/main.php?evid=520476" catalog:eventid="00520476" catalog:dataid="nn00520476" catalog:eventsource="nn" catalog:datasource="nn">
+      <preferredOriginID>quakeml:www.seismo.unr.edu/Origin/1361361</preferredOriginID>
+      <preferredMagnitudeID>quakeml:www.seismo.unr.edu/Magnitude/ml/293041</preferredMagnitudeID>
+      <type>earthquake</type>
+      <description>
+        <text>12.4 km SE of Lida_Junct., NV</text>
+        <type>nearest cities</type>
+      </description>
+      <creationInfo>
+        <agencyID>NN</agencyID>
+        <author>BRTT:ken</author>
+        <creationTime>2015-11-27T14:46:29.806830Z</creationTime>
+        <version>520476</version>
+      </creationInfo>
+      <origin publicID="quakeml:www.seismo.unr.edu/Origin/1361361">
+        <time>
+          <value>2015-11-27T13:52:29.418610Z</value>
+          <uncertainty>0.13</uncertainty>
+        </time>
+        <latitude>
+          <value>37.4176</value>
+          <uncertainty>0.0106</uncertainty>
+        </latitude>
+        <longitude>
+          <value>-117.0948</value>
+          <uncertainty>0.0087</uncertainty>
+        </longitude>
+        <depth>
+          <value>13900.0</value>
+          <uncertainty>2800.0</uncertainty>
+        </depth>
+        <quality>
+          <associatedPhaseCount>60</associatedPhaseCount>
+          <usedPhaseCount>29</usedPhaseCount>
+          <associatedStationCount>51</associatedStationCount>
+          <usedStationCount>22</usedStationCount>
+          <standardError>0.2283</standardError>
+          <azimuthalGap>60.21</azimuthalGap>
+          <minimumDistance>0.404</minimumDistance>
+          <maximumDistance>2.746</maximumDistance>
+          <medianDistance>1.027</medianDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>reviewed</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>BRTT:ken</author>
+          <creationTime>2015-11-27T14:46:29.806830Z</creationTime>
+          <version>1361361</version>
+        </creationInfo>
+        <originUncertainty>
+          <preferredDescription>horizontal uncertainty</preferredDescription>
+          <horizontalUncertainty>1230.0</horizontalUncertainty>
+          <minHorizontalUncertainty>760.0</minHorizontalUncertainty>
+          <maxHorizontalUncertainty>1230.0</maxHorizontalUncertainty>
+          <azimuthMaxHorizontalUncertainty>14.13</azimuthMaxHorizontalUncertainty>
+          <confidenceLevel>90.0</confidenceLevel>
+        </originUncertainty>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955679">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955679</pickID>
+          <phase>P</phase>
+          <azimuth>132.55</azimuth>
+          <distance>0.404</distance>
+          <timeResidual>0.098</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:11.903430Z</creationTime>
+            <version>6955679</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955680">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955680</pickID>
+          <phase>S</phase>
+          <azimuth>132.55</azimuth>
+          <distance>0.404</distance>
+          <timeResidual>-0.156</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:11.921440Z</creationTime>
+            <version>6955680</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955648">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955648</pickID>
+          <phase>P</phase>
+          <azimuth>173.62</azimuth>
+          <distance>0.44</distance>
+          <timeResidual>0.139</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:11.939390Z</creationTime>
+            <version>6955648</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955681">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955681</pickID>
+          <phase>S</phase>
+          <azimuth>173.62</azimuth>
+          <distance>0.44</distance>
+          <timeResidual>-0.181</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:11.951390Z</creationTime>
+            <version>6955681</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955626">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955626</pickID>
+          <phase>P</phase>
+          <azimuth>247.31</azimuth>
+          <distance>0.476</distance>
+          <timeResidual>0.288</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:11.963410Z</creationTime>
+            <version>6955626</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955682">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955682</pickID>
+          <phase>S</phase>
+          <azimuth>247.31</azimuth>
+          <distance>0.476</distance>
+          <timeResidual>0.17</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:11.977960Z</creationTime>
+            <version>6955682</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955651">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955651</pickID>
+          <phase>P</phase>
+          <azimuth>103.11</azimuth>
+          <distance>0.538</distance>
+          <timeResidual>0.49</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:11.993370Z</creationTime>
+            <version>6955651</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955683">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955683</pickID>
+          <phase>S</phase>
+          <azimuth>103.11</azimuth>
+          <distance>0.538</distance>
+          <timeResidual>0.472</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.005340Z</creationTime>
+            <version>6955683</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955615">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955615</pickID>
+          <phase>P</phase>
+          <azimuth>134.82</azimuth>
+          <distance>0.594</distance>
+          <timeResidual>0.127</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.017370Z</creationTime>
+            <version>6955615</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955652">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955652</pickID>
+          <phase>P</phase>
+          <azimuth>125.03</azimuth>
+          <distance>0.609</distance>
+          <timeResidual>0.148</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.029320Z</creationTime>
+            <version>6955652</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955619">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955619</pickID>
+          <phase>P</phase>
+          <azimuth>108.56</azimuth>
+          <distance>0.642</distance>
+          <timeResidual>0.456</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.041310Z</creationTime>
+            <version>6955619</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955654">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955654</pickID>
+          <phase>P</phase>
+          <azimuth>351.31</azimuth>
+          <distance>0.665</distance>
+          <timeResidual>-0.013</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.053290Z</creationTime>
+            <version>6955654</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955684">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955684</pickID>
+          <phase>S</phase>
+          <azimuth>351.31</azimuth>
+          <distance>0.665</distance>
+          <timeResidual>-0.311</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.065320Z</creationTime>
+            <version>6955684</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955617">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955617</pickID>
+          <phase>P</phase>
+          <azimuth>127.07</azimuth>
+          <distance>0.686</distance>
+          <timeResidual>0.169</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.095770Z</creationTime>
+            <version>6955617</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955622">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955622</pickID>
+          <phase>P</phase>
+          <azimuth>172.17</azimuth>
+          <distance>0.7</distance>
+          <timeResidual>-0.104</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.107840Z</creationTime>
+            <version>6955622</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955686">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955686</pickID>
+          <phase>S</phase>
+          <azimuth>172.17</azimuth>
+          <distance>0.7</distance>
+          <timeResidual>-0.931</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.125390Z</creationTime>
+            <version>6955686</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955618">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955618</pickID>
+          <phase>P</phase>
+          <azimuth>266.2</azimuth>
+          <distance>0.699</distance>
+          <timeResidual>0.165</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.143240Z</creationTime>
+            <version>6955618</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955687">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955687</pickID>
+          <phase>S</phase>
+          <azimuth>266.2</azimuth>
+          <distance>0.699</distance>
+          <timeResidual>-0.314</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.167230Z</creationTime>
+            <version>6955687</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955685">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955685</pickID>
+          <phase>P</phase>
+          <azimuth>149.0</azimuth>
+          <distance>0.728</distance>
+          <timeResidual>-0.069</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.179200Z</creationTime>
+            <version>6955685</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955656">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955656</pickID>
+          <phase>P</phase>
+          <azimuth>105.12</azimuth>
+          <distance>0.801</distance>
+          <timeResidual>-0.05</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.191170Z</creationTime>
+            <version>6955656</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955688">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955688</pickID>
+          <phase>S</phase>
+          <azimuth>105.12</azimuth>
+          <distance>0.801</distance>
+          <timeResidual>-0.477</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.203160Z</creationTime>
+            <version>6955688</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955690">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955690</pickID>
+          <phase>P</phase>
+          <azimuth>116.05</azimuth>
+          <distance>0.827</distance>
+          <timeResidual>-0.149</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.215210Z</creationTime>
+            <version>6955690</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955689">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955689</pickID>
+          <phase>P</phase>
+          <azimuth>113.55</azimuth>
+          <distance>0.827</distance>
+          <timeResidual>-0.063</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.227180Z</creationTime>
+            <version>6955689</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955691">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955691</pickID>
+          <phase>P</phase>
+          <azimuth>111.06</azimuth>
+          <distance>0.829</distance>
+          <timeResidual>0.089</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.239180Z</creationTime>
+            <version>6955691</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955625">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955625</pickID>
+          <phase>P</phase>
+          <azimuth>108.58</azimuth>
+          <distance>0.832</distance>
+          <timeResidual>0.006</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.275100Z</creationTime>
+            <version>6955625</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955692">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955692</pickID>
+          <phase>P</phase>
+          <azimuth>105.23</azimuth>
+          <distance>0.839</distance>
+          <timeResidual>-0.157</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.287170Z</creationTime>
+            <version>6955692</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955655">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955655</pickID>
+          <phase>P</phase>
+          <azimuth>127.3</azimuth>
+          <distance>0.847</distance>
+          <timeResidual>0.022</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.299050Z</creationTime>
+            <version>6955655</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955693">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955693</pickID>
+          <phase>P</phase>
+          <azimuth>108.07</azimuth>
+          <distance>0.878</distance>
+          <timeResidual>0.174</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.311060Z</creationTime>
+            <version>6955693</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955627">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955627</pickID>
+          <phase>P</phase>
+          <azimuth>159.18</azimuth>
+          <distance>0.914</distance>
+          <timeResidual>-0.127</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.323060Z</creationTime>
+            <version>6955627</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955660">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955660</pickID>
+          <phase>P</phase>
+          <azimuth>110.61</azimuth>
+          <distance>0.955</distance>
+          <timeResidual>-0.053</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.335060Z</creationTime>
+            <version>6955660</version>
+          </creationInfo>
+          <css:timedef>d</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955653">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955653</pickID>
+          <phase>P</phase>
+          <azimuth>248.44</azimuth>
+          <distance>0.974</distance>
+          <timeResidual>1.379</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.347060Z</creationTime>
+            <version>6955653</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955634">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955634</pickID>
+          <phase>P</phase>
+          <azimuth>134.15</azimuth>
+          <distance>0.986</distance>
+          <timeResidual>0.617</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.359000Z</creationTime>
+            <version>6955634</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955633">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955633</pickID>
+          <phase>P</phase>
+          <azimuth>280.46</azimuth>
+          <distance>1.006</distance>
+          <timeResidual>0.706</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.371000Z</creationTime>
+            <version>6955633</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955637">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955637</pickID>
+          <phase>P</phase>
+          <azimuth>117.12</azimuth>
+          <distance>1.015</distance>
+          <timeResidual>0.766</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.383040Z</creationTime>
+            <version>6955637</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955644">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955644</pickID>
+          <phase>P</phase>
+          <azimuth>129.47</azimuth>
+          <distance>1.027</distance>
+          <timeResidual>1.79</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.394980Z</creationTime>
+            <version>6955644</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955650">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955650</pickID>
+          <phase>P</phase>
+          <azimuth>134.64</azimuth>
+          <distance>1.033</distance>
+          <timeResidual>0.742</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.406950Z</creationTime>
+            <version>6955650</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955641">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955641</pickID>
+          <phase>P</phase>
+          <azimuth>131.8</azimuth>
+          <distance>1.039</distance>
+          <timeResidual>1.025</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.418980Z</creationTime>
+            <version>6955641</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955624">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955624</pickID>
+          <phase>P</phase>
+          <azimuth>133.86</azimuth>
+          <distance>1.048</distance>
+          <timeResidual>1.687</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.430950Z</creationTime>
+            <version>6955624</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955642">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955642</pickID>
+          <phase>P</phase>
+          <azimuth>131.55</azimuth>
+          <distance>1.058</distance>
+          <timeResidual>0.729</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.442920Z</creationTime>
+            <version>6955642</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955645">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955645</pickID>
+          <phase>P</phase>
+          <azimuth>131.93</azimuth>
+          <distance>1.074</distance>
+          <timeResidual>1.96</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.455210Z</creationTime>
+            <version>6955645</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955647">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955647</pickID>
+          <phase>P</phase>
+          <azimuth>77.61</azimuth>
+          <distance>1.093</distance>
+          <timeResidual>1.983</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.466900Z</creationTime>
+            <version>6955647</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955643">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955643</pickID>
+          <phase>P</phase>
+          <azimuth>127.57</azimuth>
+          <distance>1.122</distance>
+          <timeResidual>0.988</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.478920Z</creationTime>
+            <version>6955643</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955614">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955614</pickID>
+          <phase>P</phase>
+          <azimuth>145.8</azimuth>
+          <distance>1.163</distance>
+          <timeResidual>0.965</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.490890Z</creationTime>
+            <version>6955614</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955630">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955630</pickID>
+          <phase>P</phase>
+          <azimuth>129.56</azimuth>
+          <distance>1.178</distance>
+          <timeResidual>0.996</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.502870Z</creationTime>
+            <version>6955630</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955616">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955616</pickID>
+          <phase>P</phase>
+          <azimuth>219.16</azimuth>
+          <distance>1.256</distance>
+          <timeResidual>1.322</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.514840Z</creationTime>
+            <version>6955616</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955635">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955635</pickID>
+          <phase>P</phase>
+          <azimuth>280.45</azimuth>
+          <distance>1.258</distance>
+          <timeResidual>1.908</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.526920Z</creationTime>
+            <version>6955635</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955621">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955621</pickID>
+          <phase>P</phase>
+          <azimuth>164.42</azimuth>
+          <distance>1.278</distance>
+          <timeResidual>1.461</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.538840Z</creationTime>
+            <version>6955621</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955639">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955639</pickID>
+          <phase>P</phase>
+          <azimuth>273.56</azimuth>
+          <distance>1.294</distance>
+          <timeResidual>2.146</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.550810Z</creationTime>
+            <version>6955639</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955628">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955628</pickID>
+          <phase>P</phase>
+          <azimuth>307.25</azimuth>
+          <distance>1.391</distance>
+          <timeResidual>1.975</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.562820Z</creationTime>
+            <version>6955628</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955632">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955632</pickID>
+          <phase>P</phase>
+          <azimuth>279.28</azimuth>
+          <distance>1.397</distance>
+          <timeResidual>3.097</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.576450Z</creationTime>
+            <version>6955632</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955629">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955629</pickID>
+          <phase>P</phase>
+          <azimuth>279.57</azimuth>
+          <distance>1.447</distance>
+          <timeResidual>3.129</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.592790Z</creationTime>
+            <version>6955629</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955638">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955638</pickID>
+          <phase>P</phase>
+          <azimuth>51.52</azimuth>
+          <distance>1.512</distance>
+          <timeResidual>1.354</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.604760Z</creationTime>
+            <version>6955638</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955631">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955631</pickID>
+          <phase>P</phase>
+          <azimuth>278.37</azimuth>
+          <distance>1.589</distance>
+          <timeResidual>3.239</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.616800Z</creationTime>
+            <version>6955631</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955646">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955646</pickID>
+          <phase>P</phase>
+          <azimuth>317.55</azimuth>
+          <distance>1.652</distance>
+          <timeResidual>2.931</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.628760Z</creationTime>
+            <version>6955646</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955649">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955649</pickID>
+          <phase>P</phase>
+          <azimuth>119.93</azimuth>
+          <distance>1.798</distance>
+          <timeResidual>2.044</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.646730Z</creationTime>
+            <version>6955649</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955640">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955640</pickID>
+          <phase>P</phase>
+          <azimuth>135.53</azimuth>
+          <distance>1.879</distance>
+          <timeResidual>3.472</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.664700Z</creationTime>
+            <version>6955640</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955659">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955659</pickID>
+          <phase>P</phase>
+          <azimuth>313.57</azimuth>
+          <distance>2.302</distance>
+          <timeResidual>1.998</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.676720Z</creationTime>
+            <version>6955659</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955623">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955623</pickID>
+          <phase>P</phase>
+          <azimuth>95.1</azimuth>
+          <distance>2.537</distance>
+          <timeResidual>3.957</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.688670Z</creationTime>
+            <version>6955623</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955658">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955658</pickID>
+          <phase>P</phase>
+          <azimuth>88.03</azimuth>
+          <distance>2.571</distance>
+          <timeResidual>1.532</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.700650Z</creationTime>
+            <version>6955658</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <arrival publicID="quakeml:www.seismo.unr.edu/Arrival/6955657">
+          <pickID>quakeml:www.seismo.unr.edu/Pick/6955657</pickID>
+          <phase>P</phase>
+          <azimuth>313.93</azimuth>
+          <distance>2.746</distance>
+          <timeResidual>2.716</timeResidual>
+          <timeWeight>0.0</timeWeight>
+          <earthModelID>smi:www.seismo.unr.edu/VelocityModel/pickema2</earthModelID>
+          <creationInfo>
+            <agencyID>NN</agencyID>
+            <creationTime>2015-11-27T14:46:12.712720Z</creationTime>
+            <version>6955657</version>
+          </creationInfo>
+          <css:timedef>n</css:timedef>
+        </arrival>
+        <css:etype>L</css:etype>
+      </origin>
+      <magnitude publicID="quakeml:www.seismo.unr.edu/Magnitude/ml/293041">
+        <mag>
+          <value>2.5</value>
+          <uncertainty>0.2</uncertainty>
+        </mag>
+        <type>ml</type>
+        <originID>quakeml:www.seismo.unr.edu/Origin/1361361</originID>
+        <stationCount>11</stationCount>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>reviewed</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbml:ken</author>
+          <creationTime>2015-11-27T14:46:23.232300Z</creationTime>
+          <version>293041</version>
+        </creationInfo>
+      </magnitude>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955679">
+        <time>
+          <value>2015-11-27T13:52:37.616950Z</value>
+        </time>
+        <waveformID stationCode="TYM" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:41:42.824230Z</creationTime>
+          <version>6955679</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955680">
+        <time>
+          <value>2015-11-27T13:52:43.317900Z</value>
+        </time>
+        <waveformID stationCode="TYM" networkCode="SN" channelCode="EHN" locationCode=""></waveformID>
+        <phaseHint>S</phaseHint>
+        <polarity>negative</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:41:47.953960Z</creationTime>
+          <version>6955680</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955648">
+        <time>
+          <value>2015-11-27T13:52:38.308390Z</value>
+        </time>
+        <waveformID stationCode="SGR" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:41:49.768640Z</creationTime>
+          <version>6955648</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955681">
+        <time>
+          <value>2015-11-27T13:52:44.423190Z</value>
+        </time>
+        <waveformID stationCode="SGR" networkCode="SN" channelCode="EHE" locationCode=""></waveformID>
+        <phaseHint>S</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:42:04.828080Z</creationTime>
+          <version>6955681</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955626">
+        <time>
+          <value>2015-11-27T13:52:39.097410Z</value>
+        </time>
+        <waveformID stationCode="LCH" networkCode="NN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>negative</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:41:51.552800Z</creationTime>
+          <version>6955626</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955682">
+        <time>
+          <value>2015-11-27T13:52:45.877840Z</value>
+        </time>
+        <waveformID stationCode="LCH" networkCode="NN" channelCode="HHN" locationCode=""></waveformID>
+        <phaseHint>S</phaseHint>
+        <polarity>negative</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:42:10.514470Z</creationTime>
+          <version>6955682</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955651">
+        <time>
+          <value>2015-11-27T13:52:40.478390Z</value>
+        </time>
+        <waveformID stationCode="STC" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:41:55.915170Z</creationTime>
+          <version>6955651</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955683">
+        <time>
+          <value>2015-11-27T13:52:48.233960Z</value>
+        </time>
+        <waveformID stationCode="STC" networkCode="SN" channelCode="EHN" locationCode=""></waveformID>
+        <phaseHint>S</phaseHint>
+        <polarity>negative</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:42:16.937090Z</creationTime>
+          <version>6955683</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955615">
+        <time>
+          <value>2015-11-27T13:52:41.070000Z</value>
+        </time>
+        <waveformID stationCode="BTW" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:41:59.643400Z</creationTime>
+          <version>6955615</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955652">
+        <time>
+          <value>2015-11-27T13:52:41.415000Z</value>
+        </time>
+        <waveformID stationCode="TIM" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:42:23.758730Z</creationTime>
+          <version>6955652</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955619">
+        <time>
+          <value>2015-11-27T13:52:42.375640Z</value>
+        </time>
+        <waveformID stationCode="ECO" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:42:29.586160Z</creationTime>
+          <version>6955619</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955654">
+        <time>
+          <value>2015-11-27T13:52:42.304100Z</value>
+        </time>
+        <waveformID stationCode="TPH" networkCode="LB" channelCode="HHZ" locationCode="01"></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:42:35.381830Z</creationTime>
+          <version>6955654</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955684">
+        <time>
+          <value>2015-11-27T13:52:51.479600Z</value>
+        </time>
+        <waveformID stationCode="TPH" networkCode="LB" channelCode="HHE" locationCode="01"></waveformID>
+        <phaseHint>S</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:42:44.488310Z</creationTime>
+          <version>6955684</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955617">
+        <time>
+          <value>2015-11-27T13:52:42.860000Z</value>
+        </time>
+        <waveformID stationCode="DOM" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:42:52.648090Z</creationTime>
+          <version>6955617</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955622">
+        <time>
+          <value>2015-11-27T13:52:42.708810Z</value>
+        </time>
+        <waveformID stationCode="HEL" networkCode="SN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:42:56.352420Z</creationTime>
+          <version>6955622</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955686">
+        <time>
+          <value>2015-11-27T13:52:51.698770Z</value>
+        </time>
+        <waveformID stationCode="HEL" networkCode="SN" channelCode="HHE" locationCode=""></waveformID>
+        <phaseHint>S</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:43:31.438830Z</creationTime>
+          <version>6955686</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955618">
+        <time>
+          <value>2015-11-27T13:52:43.081750Z</value>
+        </time>
+        <waveformID stationCode="DSP" networkCode="NN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:43:12.277620Z</creationTime>
+          <version>6955618</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955687">
+        <time>
+          <value>2015-11-27T13:52:52.512770Z</value>
+        </time>
+        <waveformID stationCode="DSP" networkCode="NN" channelCode="HHN" locationCode=""></waveformID>
+        <phaseHint>S</phaseHint>
+        <polarity>negative</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:43:37.141480Z</creationTime>
+          <version>6955687</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955685">
+        <time>
+          <value>2015-11-27T13:52:43.304380Z</value>
+        </time>
+        <waveformID stationCode="WCT" networkCode="NN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:43:21.896600Z</creationTime>
+          <version>6955685</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955656">
+        <time>
+          <value>2015-11-27T13:52:44.690000Z</value>
+        </time>
+        <waveformID stationCode="TWP" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:43:25.062560Z</creationTime>
+          <version>6955656</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955688">
+        <time>
+          <value>2015-11-27T13:52:55.515230Z</value>
+        </time>
+        <waveformID stationCode="TWP" networkCode="SN" channelCode="EHE" locationCode=""></waveformID>
+        <phaseHint>S</phaseHint>
+        <polarity>negative</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:43:44.939350Z</creationTime>
+          <version>6955688</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955690">
+        <time>
+          <value>2015-11-27T13:52:45.097490Z</value>
+        </time>
+        <waveformID stationCode="L4034" networkCode="SN" channelCode="CHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:44:01.435850Z</creationTime>
+          <version>6955690</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955689">
+        <time>
+          <value>2015-11-27T13:52:45.170940Z</value>
+        </time>
+        <waveformID stationCode="L4032" networkCode="SN" channelCode="CHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:43:56.024080Z</creationTime>
+          <version>6955689</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955691">
+        <time>
+          <value>2015-11-27T13:52:45.326040Z</value>
+        </time>
+        <waveformID stationCode="L4030" networkCode="SN" channelCode="CHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:44:07.890280Z</creationTime>
+          <version>6955691</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955625">
+        <time>
+          <value>2015-11-27T13:52:45.308000Z</value>
+        </time>
+        <waveformID stationCode="L4028" networkCode="SN" channelCode="CHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955625</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955692">
+        <time>
+          <value>2015-11-27T13:52:45.291730Z</value>
+        </time>
+        <waveformID stationCode="L4023" networkCode="SN" channelCode="CHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:44:23.137960Z</creationTime>
+          <version>6955692</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955655">
+        <time>
+          <value>2015-11-27T13:52:45.665000Z</value>
+        </time>
+        <waveformID stationCode="TPW" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:44:24.866070Z</creationTime>
+          <version>6955655</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955693">
+        <time>
+          <value>2015-11-27T13:52:46.312960Z</value>
+        </time>
+        <waveformID stationCode="L3028" networkCode="SN" channelCode="CHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:44:32.654840Z</creationTime>
+          <version>6955693</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955627">
+        <time>
+          <value>2015-11-27T13:52:46.635000Z</value>
+        </time>
+        <waveformID stationCode="LEC" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>positive</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:44:42.040220Z</creationTime>
+          <version>6955627</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955660">
+        <time>
+          <value>2015-11-27T13:52:47.339500Z</value>
+        </time>
+        <waveformID stationCode="YFT" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <polarity>negative</polarity>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>dbp:ken:15331</author>
+          <creationTime>2015-11-27T14:44:45.345810Z</creationTime>
+          <version>6955660</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955653">
+        <time>
+          <value>2015-11-27T13:52:49.018300Z</value>
+        </time>
+        <waveformID stationCode="TIN" networkCode="CI" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955653</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955634">
+        <time>
+          <value>2015-11-27T13:52:48.425000Z</value>
+        </time>
+        <waveformID stationCode="NSP" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955634</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955633">
+        <time>
+          <value>2015-11-27T13:52:48.890000Z</value>
+        </time>
+        <waveformID stationCode="MLN" networkCode="NN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955633</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955637">
+        <time>
+          <value>2015-11-27T13:52:48.995000Z</value>
+        </time>
+        <waveformID stationCode="PUV" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955637</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955644">
+        <time>
+          <value>2015-11-27T13:52:50.195000Z</value>
+        </time>
+        <waveformID stationCode="RVNE" networkCode="SN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955644</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955650">
+        <time>
+          <value>2015-11-27T13:52:49.200000Z</value>
+        </time>
+        <waveformID stationCode="SPRS" networkCode="SN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955650</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955641">
+        <time>
+          <value>2015-11-27T13:52:49.570000Z</value>
+        </time>
+        <waveformID stationCode="RTPP" networkCode="SN" channelCode="EHZ" locationCode="00"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955641</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955624">
+        <time>
+          <value>2015-11-27T13:52:50.355000Z</value>
+        </time>
+        <waveformID stationCode="JFR2" networkCode="SN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955624</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955642">
+        <time>
+          <value>2015-11-27T13:52:49.550000Z</value>
+        </time>
+        <waveformID stationCode="RVEE" networkCode="SN" channelCode="EHZ" locationCode="00"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955642</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955645">
+        <time>
+          <value>2015-11-27T13:52:51.005000Z</value>
+        </time>
+        <waveformID stationCode="RVSE" networkCode="SN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955645</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955647">
+        <time>
+          <value>2015-11-27T13:52:51.338390Z</value>
+        </time>
+        <waveformID stationCode="S11A" networkCode="NN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955647</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955643">
+        <time>
+          <value>2015-11-27T13:52:50.700000Z</value>
+        </time>
+        <waveformID stationCode="RVFF" networkCode="SN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955643</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955614">
+        <time>
+          <value>2015-11-27T13:52:51.220000Z</value>
+        </time>
+        <waveformID stationCode="AMD" networkCode="SN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955614</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955630">
+        <time>
+          <value>2015-11-27T13:52:51.535000Z</value>
+        </time>
+        <waveformID stationCode="MCY" networkCode="SN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955630</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955616">
+        <time>
+          <value>2015-11-27T13:52:53.008300Z</value>
+        </time>
+        <waveformID stationCode="CWC" networkCode="CI" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955616</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955635">
+        <time>
+          <value>2015-11-27T13:52:53.740000Z</value>
+        </time>
+        <waveformID stationCode="ORC" networkCode="NN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955635</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955621">
+        <time>
+          <value>2015-11-27T13:52:53.458390Z</value>
+        </time>
+        <waveformID stationCode="GWY" networkCode="NN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955621</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955639">
+        <time>
+          <value>2015-11-27T13:52:54.570000Z</value>
+        </time>
+        <waveformID stationCode="RCC" networkCode="NN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955639</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955628">
+        <time>
+          <value>2015-11-27T13:52:55.698390Z</value>
+        </time>
+        <waveformID stationCode="LHV" networkCode="NN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955628</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955632">
+        <time>
+          <value>2015-11-27T13:52:56.878300Z</value>
+        </time>
+        <waveformID stationCode="MLAC" networkCode="CI" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955632</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955629">
+        <time>
+          <value>2015-11-27T13:52:57.650000Z</value>
+        </time>
+        <waveformID stationCode="MCB" networkCode="NC" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955629</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955638">
+        <time>
+          <value>2015-11-27T13:52:56.700000Z</value>
+        </time>
+        <waveformID stationCode="R11A" networkCode="NN" channelCode="BHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955638</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955631">
+        <time>
+          <value>2015-11-27T13:52:59.760000Z</value>
+        </time>
+        <waveformID stationCode="MDPB" networkCode="NC" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955631</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955646">
+        <time>
+          <value>2015-11-27T13:53:00.245000Z</value>
+        </time>
+        <waveformID stationCode="RYN" networkCode="NN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955646</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955649">
+        <time>
+          <value>2015-11-27T13:53:01.415000Z</value>
+        </time>
+        <waveformID stationCode="SHP" networkCode="NN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955649</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955640">
+        <time>
+          <value>2015-11-27T13:53:03.925000Z</value>
+        </time>
+        <waveformID stationCode="RRK" networkCode="NN" channelCode="EHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955640</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955659">
+        <time>
+          <value>2015-11-27T13:53:08.560000Z</value>
+        </time>
+        <waveformID stationCode="YER" networkCode="NN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955659</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955623">
+        <time>
+          <value>2015-11-27T13:53:13.790000Z</value>
+        </time>
+        <waveformID stationCode="ICU" networkCode="UU" channelCode="EHZ" locationCode="01"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955623</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955658">
+        <time>
+          <value>2015-11-27T13:53:11.910000Z</value>
+        </time>
+        <waveformID stationCode="VRUT" networkCode="UU" channelCode="HHZ" locationCode="01"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955658</version>
+        </creationInfo>
+      </pick>
+      <pick publicID="quakeml:www.seismo.unr.edu/Pick/6955657">
+        <time>
+          <value>2015-11-27T13:53:15.585000Z</value>
+        </time>
+        <waveformID stationCode="VCN" networkCode="NN" channelCode="HHZ" locationCode=""></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>automatic</evaluationMode>
+        <evaluationStatus>preliminary</evaluationStatus>
+        <creationInfo>
+          <agencyID>NN</agencyID>
+          <author>orbassoc</author>
+          <creationTime>2015-11-27T13:55:14.908300Z</creationTime>
+          <version>6955657</version>
+        </creationInfo>
+      </pick>
+    </event>
+  </eventParameters>
+</q:quakeml>

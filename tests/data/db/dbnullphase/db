@@ -1,0 +1,3 @@
+# Datascope Database Descriptor file
+schema iceworm1.5
+Detail *main::dbcreate

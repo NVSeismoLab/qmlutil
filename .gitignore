@@ -6,3 +6,4 @@ dist
 .cache
 *.swp
 debian
+private
