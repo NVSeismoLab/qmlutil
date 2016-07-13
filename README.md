@@ -1,13 +1,13 @@
 qmlutil
 =======
-qmlutil - Utilities for QuakeML
+Utilities for QuakeML
 
-This is NSL's python package for dealing with "QML", the QuakeML Model Language schema.
-
-Needs examples and doc
+In a perfect world, all professional seismological applications speak QuakeML. This is for when that doesn't happen.
 
 About
 -----
+This is the Nevada Seismological Lab's python package for dealing with "QML", the QuakeML Model Language schema. It mostly contains housekeeping classes and functions for dealing with python dicts and lists adhering to the QuakeML v1.2 schema. It contains some schema converter classes, and a few plugins for using 3rd party libraries.
+
 This module is a work-in-progress, and may change until a 1.0 release. That said, the goal is to keep the current methods and API stable up to and through the 1.0. NSL is currently using this lib in production, so it behooves us not to change the API as much as possible. More/better doc to come, hopefully.
 
 NSL builds all python libraries as wheels; to build qmlutil, clone the repo and build an installable wheel in the top-level directory:
@@ -29,12 +29,14 @@ The core of this module has no external dependencies. Serialization to XML is do
 
 Description
 -----------
-Expand this
-`qmlutil.css` - Convert between CSS3.0 and QML1.2 schemas (currently only CSS->QML)
-`qmlutil.ichinose` - Convert Ichinose moment tensor text output to QML1.2
-`qmlutil.xml` - Serialize a python QML structure (dicts + lists) to XML/QuakeML
-`qmlutil.aux.antelope` - Contains converter classes for Antelope CSS databases
-`qmlutil.aux.xml` - Contains classes for more advanced XML manip that require `lxml` (libxml2)
+Core
+* `qmlutil.css` - Convert between CSS3.0 and QML1.2 schemas (currently only CSS->QML)
+* `qmlutil.ichinose` - Convert Ichinose moment tensor text output to QML1.2
+* `qmlutil.lib` - Contains vendored packages
+* `qmlutil.xml` - Serialize a python QML structure (dicts + lists) to XML/QuakeML
+Require other python libs
+* `qmlutil.aux.antelope` - Contains converter classes for Antelope CSS databases
+* `qmlutil.aux.xml` - Contains classes for more advanced XML tasks that require libxml2
 
 Dependencies
 ------------
