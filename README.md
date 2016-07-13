@@ -34,6 +34,7 @@ Core
 * `qmlutil.ichinose` - Convert Ichinose moment tensor text output to QML1.2
 * `qmlutil.lib` - Contains vendored packages
 * `qmlutil.xml` - Serialize a python QML structure (dicts + lists) to XML/QuakeML
+
 Require other python libs
 * `qmlutil.aux.antelope` - Contains converter classes for Antelope CSS databases
 * `qmlutil.aux.xml` - Contains classes for more advanced XML tasks that require libxml2
