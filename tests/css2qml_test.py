@@ -229,8 +229,36 @@ def test_map_fplane():
     assert '@publicID' in qmlf
     
     assert qmlf.get('@publicID') == "quakeml:local.test/fplane/4257"
+    assert qmlf.get('triggeringOriginID') == "quakeml:local.test/origin/1371240"
+    
+    nps = qmlf.get('nodalPlanes', {})
+    pas = qmlf.get('principalAxes', {})
+    
+    np1 = nps.get('nodalPlane1')
+    assert isclose(np1.get('strike', {}).get('value'), 320.5) 
+    assert isclose(np1.get('dip', {}).get('value'), 56.6) 
+    assert isclose(np1.get('rake', {}).get('value'), -118.5) 
+    np2 = nps.get('nodalPlane2')
+    assert isclose(np2.get('strike', {}).get('value'), 185.1) 
+    assert isclose(np2.get('dip', {}).get('value'), 42.8) 
+    assert isclose(np2.get('rake', {}).get('value'), -54.1) 
 
-    # TODO: check more values
+    t = pas.get('tAxis', {})
+    assert isclose(t.get('azimuth', {}).get('value'), 70.4) 
+    assert isclose(t.get('plunge', {}).get('value'), 7.4) 
+    assert isclose(t.get('length', {}).get('value'), 0) 
+    p = pas.get('pAxis', {})
+    assert isclose(p.get('azimuth', {}).get('value'), 176.8) 
+    assert isclose(p.get('plunge', {}).get('value'), 65.2) 
+    assert isclose(p.get('length', {}).get('value'), 0) 
+
+    cinfo = qmlf.get('creationInfo', {})
+    assert cinfo.get('agencyID') == "QQ"
+    assert cinfo.get('author') == "HASHpy:mcassar"
+    
+    assert qmlf.get('evaluationMode') == "manual"
+    assert qmlf.get('evaluationStatus') == "reviewed"
+
 
 
 
