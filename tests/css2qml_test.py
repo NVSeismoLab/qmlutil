@@ -30,6 +30,9 @@ with open(os.path.join(PWD, 'data', 'assocarrival.json')) as f:
 with open(os.path.join(PWD, 'data', 'mt.json')) as f:
     CSS_MT = json.load(f)
 
+with open(os.path.join(PWD, 'data', 'fplane.json')) as f:
+    CSS_FM = json.load(f)
+
 # make different from defaults
 my_authority_id = "local.test"
 my_agency_code = "QQ"
@@ -220,13 +223,14 @@ def test_map_mt():
 
 def test_map_fplane():
     """Test converter for fplane focal mechanisms"""
-    pass
-    #cssf = CSS_FM
-    #qmlf = CONV.map_fplane2focalmech(cssf)
+    cssf = CSS_FM
+    qmlf = CONV.map_fplane2focalmech(cssf)
 
-    #assert '@publicID' in qmlf
+    assert '@publicID' in qmlf
+    
+    assert qmlf.get('@publicID') == "quakeml:local.test/fplane/4257"
 
-    # TODO: check values
+    # TODO: check more values
 
 
 

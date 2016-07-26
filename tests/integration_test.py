@@ -228,6 +228,34 @@ def test_db2qml():
             f.write(qmls)
     assert validate(qmls)
     
+    # ------------------------------------------------------------------------
+    # Test event with fplane focalmech
+    orid = 1371240
+    event = conv.get_event(dsn, orid, pick=True, focalMechanism=True, anss=True)
+    # Check event stuff, like anss...
+    assert event['type'] == "earthquake" 
+    if isinstance(event['description'], dict):
+        assert event['description'].get('type') == "nearest cities"
+    assert 'origin' in event and len(event['origin']) > 0
+    assert 'magnitude' in event and len(event['magnitude']) > 0
+    assert 'pick' in event and len(event['pick']) > 0
+    assert 'focalMechanism' in event and len(event['focalMechanism']) > 0
+    assert event['@catalog:eventid'] == "00524467"
+    assert event['@catalog:dataid'] == "nn00524467"
+    assert event['@catalog:datasource'] == "nn"
+    assert event['@catalog:eventsource'] == "nn"
+    assert event['@publicID'] == "quakeml:edu.unr.seismo/event/524467"
+
+    qmlroot = conv.event2root(event)
+    assert isinstance(qmlroot, dict)
+    assert 'q:quakeml' in qmlroot
+    
+    # Generate QuakeML and validate
+    qmls = dumps(qmlroot, indent="  ", pretty=True, preprocessor=my_preproc)
+    if pytest.config.getoption("--writefiles"):
+        with open('/tmp/qmlutil-test-fm-524467.xml', 'w') as f:
+            f.write(qmls)
+    assert validate(qmls)
    
 @integration
 def test_ichinose_file():

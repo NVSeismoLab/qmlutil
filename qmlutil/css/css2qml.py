@@ -689,11 +689,13 @@ class CSSToQMLConverter(Root):
             ('tAxis', Dict([
                 ('azimuth', Dict(value = db.get('taxazm'))),
                 ('plunge', Dict(value = db.get('taxplg'))),
+                ('length', Dict(value = 0)),
                 ])
             ),
             ('pAxis', Dict([
                 ('azimuth', Dict(value = db.get('paxazm'))),
                 ('plunge', Dict(value = db.get('paxplg'))),
+                ('length', Dict(value = 0)),
                 ])
             ),
         ])
