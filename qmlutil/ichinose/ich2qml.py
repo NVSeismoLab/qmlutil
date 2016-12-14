@@ -231,7 +231,7 @@ class Parser(object):
                 ichi['derived_depth'] = p._depth(n)
             if 'Mw' in l:
                 ichi['mag'] = p._mw(n) 
-                ichi['magtype'] = 'Mw'
+                ichi['magtype'] = 'Mwr'
             if 'Mo' in l and 'dyne' in l:
                 ichi['scalar_moment'] = p._mo(n)
             if 'Percent Double Couple' in l:

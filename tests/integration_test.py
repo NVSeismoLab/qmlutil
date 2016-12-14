@@ -274,6 +274,17 @@ def test_ichinose_file():
         )
         event = ichicnv.get_event(anss=True)
     
+    # Check values from file here:
+    assert 'origin' in event and len(event['origin']) > 0
+   
+    assert 'magnitude' in event and len(event['magnitude']) > 0
+    mag = event['magnitude'][0]
+    assert mag['mag'].get('value') == 3.95
+    assert mag['type'] == "Mwr"
+
+    assert 'focalMechanism' in event and len(event['focalMechanism']) > 0
+
+    
     qmlroot = ichicnv.event2root(event)
     
     assert isinstance(qmlroot, dict)
