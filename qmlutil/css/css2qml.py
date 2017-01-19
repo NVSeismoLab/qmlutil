@@ -359,6 +359,32 @@ class CSSToQMLConverter(Root):
             ('originID', self._uri(originID_rid)),
         ])
         return stationmagnitude
+    
+    def map_stamag2magnitudecontrib(self, db):
+        """
+        Map stamag record to StationMagnitudeContribution
+        """
+        stamagID_rid = "{0}/{1}-{2}-{3}-{4}".format(
+            'stamag',
+            db.get('sta'),
+            db.get('magtype'),
+            db.get('orid') or uuid.uuid4(),
+            db.get('magid') or uuid.uuid4(),
+        )
+        
+        # 'residual' and 'weight' not in CSS3.0 stamag
+        stamagcontrib = Dict([
+            ('stationMagnitudeID', self._uri(stamagID_rid)),
+        ])
+        return stamagcontrib
+    
+    def map_stamag2stamag_stamagcontrib(self, db):
+        """
+        Return both StationMagnitude and StationMagnitudeContribution
+        """
+        stamag = self.map_stamag2stationmagnitude(db)
+        stamagcontrib = self.map_stamag2magnitudecontrib(db)
+        return (stamag, stamagcontrib)
 
     def map_netmag2magnitude(self, db):
         """
@@ -862,6 +888,13 @@ class CSSToQMLConverter(Root):
         """
         pick_arr_pairs = [self.map_assocarrival2pickarrival(row) for row in records]
         return map(list, zip(*pick_arr_pairs))
+    
+    def convert_magnitudes(self, records):
+        """
+        Station Magnitudes (Mags + Contributions) converter
+        """
+        sm_cb_pairs = [self.map_stamag2stamag_stamagcontrib(r) for r in records]
+        return map(list, zip(*sm_cb_pairs))
 
     def convert_focalmechs(self, records, schema='fplane'):
         """

@@ -168,10 +168,8 @@ def test_map_stamags():
     """
     Test converter for station magnitudes
     """
-    cssm = CSS_STAMAGS
-    qmlmags = [CONV.map_stamag2stationmagnitude(m) for m in cssm]
-    assert len(cssm) == 5
-    qmlm = qmlmags[0]
+    cssm = CSS_STAMAGS[0]
+    qmlm = CONV.map_stamag2stationmagnitude(cssm)
 
     assert '@publicID' in qmlm
     assert 'originID' in qmlm
@@ -186,6 +184,15 @@ def test_map_stamags():
     cinfo = qmlm.get('creationInfo', {})
     assert cinfo.get('agencyID') == "QQ"
     assert cinfo.get('author') == "dbml:tom"
+
+def test_map_stamag_contribs():
+    """
+    Test converter for station magnitude contributions
+    """
+    cssm = CSS_STAMAGS[0]
+    qmlm = CONV.map_stamag2magnitudecontrib(cssm)
+
+    assert qmlm.get('stationMagnitudeID') == "quakeml:local.test/stamag/LKVW-ml-1371545-296149"
 
 
 def test_map_arrival():
