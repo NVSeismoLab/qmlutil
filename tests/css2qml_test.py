@@ -33,6 +33,9 @@ with open(os.path.join(PWD, 'data', 'mt.json')) as f:
 with open(os.path.join(PWD, 'data', 'fplane.json')) as f:
     CSS_FM = json.load(f)
 
+with open(os.path.join(PWD, 'data', 'stamag.json')) as f:
+    CSS_STAMAGS = json.load(f)
+
 # make different from defaults
 my_authority_id = "local.test"
 my_agency_code = "QQ"
@@ -159,6 +162,30 @@ def test_map_originmag():
     csso2['mlid'] = None
     qmlm = CONV.map_origin2magnitude(csso2)
     assert qmlm.get('@publicID') == "quakeml:local.test/origin/1371545#ml"
+
+
+def test_map_stamags():
+    """
+    Test converter for station magnitudes
+    """
+    cssm = CSS_STAMAGS
+    qmlmags = [CONV.map_stamag2stationmagnitude(m) for m in cssm]
+    assert len(cssm) == 5
+    qmlm = qmlmags[0]
+
+    assert '@publicID' in qmlm
+    assert 'originID' in qmlm
+    assert 'mag' in qmlm
+
+    assert qmlm.get('@publicID') == "quakeml:local.test/stamag/LKVW-ml-1371545-296149"
+    assert qmlm.get('originID') == "quakeml:local.test/origin/1371545"
+    
+    assert isclose(qmlm.get('mag', {}).get('value'), 3.13)
+    assert qmlm.get('type') == "ml"
+    
+    cinfo = qmlm.get('creationInfo', {})
+    assert cinfo.get('agencyID') == "QQ"
+    assert cinfo.get('author') == "dbml:tom"
 
 
 def test_map_arrival():
