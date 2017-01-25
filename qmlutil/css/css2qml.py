@@ -153,7 +153,9 @@ def _get_NE_on_ellipse(A, B, strike):
 
 
 def extract_etype(origin):
-    """Return a CSS3.0 etype flag stored in an origin"""
+    """
+    Return a CSS3.0 etype flag stored in an origin
+    """
     if 'css:etype' in origin:
         return origin['css:etype']
     else:
@@ -163,7 +165,25 @@ def extract_etype(origin):
                 if comm.get('@id','').endswith('etype'):
                     return comm.get('text')
 
-            
+
+def extract_id(uri):
+    """
+    Extract unique ID from URI following the convention in this module, which
+    is:
+    scheme:authority-id/resource-id#local-id
+
+    where:
+    resource-id = relation/unique-key#field-indicators
+
+    using the CSS schema, so relation will usually be the CSS table name, and
+    the unique key will either be a unique integer id or a primary key made of
+    other fields, or a UUID (which represents an integer).
+    """
+    # NOTE: works if no slash in primary key - sep SHOULD be dash
+    # i.e. origin/1234-345-123454 to match UUID syntax
+    return uri.split('/')[-1].split('#')[0]
+
+
 class CSSToQMLConverter(Root):
     """
     Converter to QuakeML schema from CSS3.0 schema

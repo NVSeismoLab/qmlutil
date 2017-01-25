@@ -160,7 +160,8 @@ def test_db2qml():
     
     # ------------------------------------------------------------------------
     # Test event generation
-    event = conv.get_event(dsn, orid, pick=True, focalMechanism=True, anss=True)
+    event = conv.get_event(dsn, orid, pick=True, focalMechanism=True,
+            stationMagnitude=True, anss=True)
     # Check event stuff, like anss...
     assert event['type'] == "earthquake" 
     if isinstance(event['description'], dict):
@@ -169,6 +170,7 @@ def test_db2qml():
     assert 'magnitude' in event and len(event['magnitude']) > 0
     assert 'pick' in event and len(event['pick']) > 0
     assert 'focalMechanism' in event and len(event['focalMechanism']) > 0
+    assert 'stationMagnitude' in event and len(event['stationMagnitude']) > 0
     assert event['@catalog:eventid'] == "00524465"
     assert event['@catalog:dataid'] == "nn00524465"
     assert event['@catalog:datasource'] == "nn"

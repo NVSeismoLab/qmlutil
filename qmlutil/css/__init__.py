@@ -22,5 +22,5 @@ Nevada Seismological Laboratory
 
 Classes for CSS<->QML schema conversion
 """
-from qmlutil.css.css2qml import CSSToQMLConverter, extract_etype
+from qmlutil.css.css2qml import CSSToQMLConverter, extract_etype, extract_id
 

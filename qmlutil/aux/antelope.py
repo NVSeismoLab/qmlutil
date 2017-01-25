@@ -26,7 +26,7 @@ from curds2.dbapi2 import connect
 from curds2.rows import OrderedDictRow
 
 import qmlutil as qml
-
+from qmlutil.css import extract_id
 
 class DatabaseConverter(object):
     """
@@ -169,6 +169,22 @@ class DatabaseConverter(object):
             mags += [self.converter.map_origin2magnitude(db, mtype=mtype) 
                      for mtype in ('ml', 'mb', 'ms') if db.get(mtype)]
         return mags
+    
+    def get_station_magnitudes(self, orid=None, evid=None, magid=None):
+        """
+        Return station magnitudes
+        """
+        if magid:
+            query = 'magid=={0}'.format(magid)
+        elif orid:
+            query = 'orid=={0}'.format(orid)
+        elif evid:
+            query = 'evid=={0}'.format(evid)
+
+        cmd = ['dbopen stamag', 'dbsubset {0}'.format(query)]
+        curs = self.connection.cursor()
+        rec = curs.execute('process', [cmd])
+        return self.converter.convert_magnitudes(curs)
 
     def get_phases(self, orid=None, evid=None):
         """
@@ -190,8 +206,18 @@ class DatabaseConverter(object):
         curs = self.connection.cursor()
         rec = curs.execute('process', [cmd] )
         return self.converter.convert_phases(curs)
-
-    def extract_origin(self, orid, origin=True, magnitude=True, pick=False, focalMechanism=False, anss=False):
+    
+    #
+    # TODO: this needs to be rewritten & abstracted out to higher level choices
+    # given the bool flag options and combos. Possibly even adding new methods.
+    # For example, if magnitude and stationMag, need to probably query by
+    # evid/magid in loop and add contributions to each magnitude. Should
+    # probably do the same thing with evid/orid/arrivals and picks.
+    # 
+    # Convert everything to evid, and use orid as a filter?
+    #
+    def extract_origin(self, orid, origin=True, magnitude=True, pick=False,
+            focalMechanism=False, stationMagnitude=False, anss=False):
         """
         Extract a QML Event from CSS database given an ORID
         """
@@ -226,6 +252,20 @@ class DatabaseConverter(object):
                         pass
         if focalMechanism:
             event['focalMechanism'] = self.get_mts(orid) + self.get_focalmechs(orid)
+        if stationMagnitude:
+            mag_contribs = self.get_station_magnitudes(orid)
+            if magnitude and mag_contribs:
+                _stamags, _smcontribs = mag_contribs
+                event['stationMagnitude'] = _stamags
+                # TODO: add stationMagnitudeContribution to magnitudes, same as
+                # origin/picks/arrivals...
+                get_magid = lambda sid: extract_id(sid).split('-')[-1]
+                for mag in event.get('magnitude', []):
+                    magid = extract_id(mag['@publicID'])
+                    # NOTE: this could be optimized with union sets, just brute it
+                    # for correctness so M x N for mags/stamags
+                    c = [smc for smc in _smcontribs if magid == get_magid(smc['stationMagnitudeID'])]
+                    mag['stationMagnitudeContribution'] = c 
         return event
 
 
@@ -324,7 +364,7 @@ class Db2Quakeml(object):
         return ev
                 
     def get_event(self, dsn, orid=None, evid=None, origin=True, magnitude=True, pick=False,
-            focalMechanism=False, anss=False):
+            focalMechanism=False, stationMagnitude=False, anss=False):
         """
         Run conversion with config
         """
@@ -334,8 +374,14 @@ class Db2Quakeml(object):
         #with connect(dsn, row_factory=OrderedDictRow, CONVERT_NULL=True) as conn:
         with connect(dsn) as conn:
             db = DatabaseConverter(conn, self._conv)
-            ev = db.extract_origin(orid, origin=origin, magnitude=magnitude, 
-                    pick=pick, focalMechanism=focalMechanism, anss=anss)
+            ev = db.extract_origin(orid, 
+                    origin=origin, 
+                    magnitude=magnitude, 
+                    pick=pick, 
+                    focalMechanism=focalMechanism,
+                    stationMagnitude=stationMagnitude,
+                    anss=anss
+                    )
 
         #
         # Set preferreds. The extract method should return in reversed time order, so

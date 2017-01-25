@@ -6,7 +6,8 @@ import os
 import json
 
 from qmlutil import ResourceURIGenerator, timestamp2isostr
-from qmlutil.css import CSSToQMLConverter as Converter, extract_etype
+from qmlutil.css import CSSToQMLConverter as Converter, extract_etype, \
+    extract_id
 
 
 def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
@@ -51,6 +52,22 @@ CONV = Converter(
     etype_map = my_etype_map,
     automatic_authors = ['orbassoc', 'orbmag'],
 )
+
+
+def test_extract_id():
+    """
+    Test ability to extract ID from publicID URI's
+    """
+    # These are all the forms used by the converter
+    #
+    # input, expected pairs
+    cases = [
+        (CONV._uri('table/12345'), '12345'),
+        (CONV._uri('table/123-THING-456-789'), '123-THING-456-789'),
+        (CONV._uri('table/123#latitude'), '123'),
+    ]
+    for case in cases: 
+        assert case[1] == extract_id(case[0])
 
 
 def test_map_origin():
