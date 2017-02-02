@@ -181,7 +181,12 @@ class DatabaseConverter(object):
         elif evid:
             query = 'evid=={0}'.format(evid)
 
-        cmd = ['dbopen stamag', 'dbsubset {0}'.format(query)]
+        cmd = [
+            'dbopen stamag', 
+            'dbsubset {0}'.format(query),
+            'dbjoin -o arrival', 'dbjoin -o snetsta',
+            'dbjoin -o schanloc sta chan',
+        ]
         curs = self.connection.cursor()
         rec = curs.execute('process', [cmd])
         return self.converter.convert_magnitudes(curs)

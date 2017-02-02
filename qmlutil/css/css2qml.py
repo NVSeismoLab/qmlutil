@@ -351,6 +351,11 @@ class CSSToQMLConverter(Root):
     def map_stamag2stationmagnitude(self, db):
         """
         Map stamag record to StationMagnitude
+
+        JOIN
+        ====
+        stamag -> arrival -> wfmeas (TODO: clarify/fix)
+        [also optional outer snetsta schanloc on 'sta' like picks]
         """
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
         stamagID_rid = "{0}/{1}-{2}-{3}-{4}".format(
@@ -360,6 +365,20 @@ class CSSToQMLConverter(Root):
             db.get('orid') or uuid.uuid4(),
             db.get('magid') or uuid.uuid4(),
         )
+        
+        # Create wavform ref, generic if no arrival-wfmeas join
+        def_net = self.agency[:2].upper()
+        css_sta = db.get('sta')
+        css_chan = db.get('chan', 'AML') or 'AML'
+        arrival_time = db.get('time', 0) or 0
+        wfID_rid = "{0}/{1}-{2}-{3}".format(
+            'wfdisc', 
+            css_sta,
+            css_chan,
+            int(arrival_time * 10**6),
+        )
+        # TODO: move to stamag2pick or stamag2amplitude
+        pickID_rid = "{0}/{1}".format('arrival', db.get('arid') or uuid.uuid4())
         
         stationmagnitude = Dict([
             ('@publicID', self._uri(stamagID_rid)),
@@ -377,6 +396,14 @@ class CSSToQMLConverter(Root):
                 ]),
             ),
             ('originID', self._uri(originID_rid)),
+            ('waveformID', Dict([
+                ('@stationCode', db.get('fsta') or css_sta), 
+                ('@channelCode', db.get('fchan') or css_chan),
+                ('@networkCode', db.get('snet') or def_net),
+                ('@locationCode', db.get('loc') or ""),
+                ('#text', self._uri(wfID_rid, schema="smi")),  #'resourceURI' in schema
+                ])
+            ),
         ])
         return stationmagnitude
     
