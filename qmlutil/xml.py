@@ -31,6 +31,8 @@ Note: Typing is thankfully NOT needed if the application is just creating SQL
 statements or anything in HTTP request/responses (except JSON, of course).
 
 """
+import re
+
 from qmlutil.lib import xmltodict
 
 # Module-level dict for XSD -> python type mapping
@@ -249,6 +251,39 @@ class Rounder(object):
             self._round(v, 'uncertainty', 2)
         return k, v
             
+
+class SimpleTyping(object):
+    """
+    Postprocessor for xmltodict that will ID basic python types. This is wild
+    west YAML-style, if it looks like a number, it is.
+    """
+    # TODO: add types as additional struct/class
+    IS_FLOAT = re.compile(r"[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?")
+        
+    # TODO: add time, make optional templates???
+    
+    def __init__(self, *args, **kwargs):
+        # TODO: construct things like (type_, regex) tuples to loop through and
+        # pass in call, do in init to avoid overhead.
+        pass
+
+    def __call__(self, path, k, v):
+        # Ignore if supposed to be string for now
+        # NOTE: attribs and cdata can be changed...
+        if k.startswith('@') or k == "#text":
+            return (k, v)
+        
+        # NOTE: fails on times???
+        try:
+            if v.isdigit():
+                v = int(v)
+            elif self.IS_FLOAT.match(v):
+                v = float(v)
+        except Exception as e:
+            # log
+            pass
+        return (k, v)
+
 
 def ignore_null(k, v):
     """
