@@ -257,31 +257,32 @@ class SimpleTyping(object):
     Postprocessor for xmltodict that will ID basic python types. This is wild
     west YAML-style, if it looks like a number, it is.
     """
-    # TODO: add types as additional struct/class
-    IS_FLOAT = re.compile(r"[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?")
-        
-    # TODO: add time, make optional templates???
-    
+    regex_types = [
+        # INT
+        (re.compile(r"[-+]?\d+"), int),
+        # FLOAT
+        (re.compile(r"[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?"), float),
+    ]
+
     def __init__(self, *args, **kwargs):
-        # TODO: construct things like (type_, regex) tuples to loop through and
-        # pass in call, do in init to avoid overhead.
         pass
 
     def __call__(self, path, k, v):
-        # Ignore if supposed to be string for now
+        # Ignore if supposed to be string for now, in XML attrib should always
+        # be quoted, so just assume strings.
         # NOTE: attribs and cdata can be changed...
         if k.startswith('@') or k == "#text":
             return (k, v)
         
+        # Try every regex and type it if match
         # NOTE: fails on times???
-        try:
-            if v.isdigit():
-                v = int(v)
-            elif self.IS_FLOAT.match(v):
-                v = float(v)
-        except Exception as e:
-            # log
-            pass
+        for exp, type_ in self.regex_types:
+            try:
+                if exp.match(v):
+                    v = type_(v)
+                    return (k, v)
+            except Exception as e:
+                pass # log
         return (k, v)
 
 
