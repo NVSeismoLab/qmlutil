@@ -25,7 +25,7 @@ from setuptools import setup
 
 s_args = {
     'name': 'qmlutil',
-    'version': '0.6.1',
+    'version': '0.9.0',
     'description': 'QuakeML utils for python',
     'author': 'Mark Williams',
     'maintainer': 'Nevada Seismological Laboratory',
@@ -34,7 +34,7 @@ s_args = {
         'qmlutil',
         'qmlutil.aux',
         'qmlutil.css',
-        'qmlutil.data',  # TODO: add static files IMPORTANT!!
+        'qmlutil.data',
         'qmlutil.lib',
         'qmlutil.ichinose',
     ],

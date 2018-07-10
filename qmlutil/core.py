@@ -30,6 +30,7 @@ except ImportError as e:
 
 # Time format for string
 RFC3339 = '%Y-%m-%dT%H:%M:%S.%fZ'
+TIMEFMT = RFC3339
 
 Q_NAMESPACE ="http://quakeml.org/xmlns/quakeml/1.2"       # xmlns:q
 CATALOG_NAMESPACE = "http://anss.org/xmlns/catalog/0.1"   # xmlns:catalog
@@ -58,6 +59,16 @@ def rfc3339(dt):
     """
     return dt.strftime(RFC3339)
     
+
+def time(s):
+    """Return datetime from string"""
+    return datetime.datetime.strptime(s, TIMEFMT)
+
+
+def time_string(dt):
+    """Return string from datetime"""
+    return dt.strftime(TIMEFMT)
+
 
 def timestamp2isostr(timestamp):
     """
