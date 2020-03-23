@@ -1,0 +1,102 @@
+<pre style="font-family:Monospace;font-size:12pt;">
+REVIEWED BY NSL STAFF
+
+Event ID:719663
+Origin ID:1907674
+Algorithm: Ichinose (2003) Long Period, Regional-Distance Waves
+Seismic Moment Tensor Solution
+
+2020/03/21 (081) 01:33:36.00 39.1112 -119.7361 001
+	Depth =   6.0 (km)
+	Mw    =  4.53
+	Mo    =  7.73x10^22 (dyne x cm)
+
+	Percent Double Couple =  86 %
+	Percent CLVD          =  14 %
+	no ISO calculated
+	Epsilon=0.07
+	 Percent Variance Reduction =  72.49 %
+	 Total Fit                  =  4.99 
+	Major Double Couple
+		            strike dip   rake
+		Nodal Plane 1: 335  51 -137
+		Nodal Plane 2: 214  58  -48
+
+	DEVIATORIC MOMENT TENSOR
+
+	Moment Tensor Elements: Spherical Coordinates
+		Mrr= -4.99 Mtt= -2.62 Mff=  7.61
+		Mrt=  3.18 Mrf=  0.50 Mtf=  0.84 EXP=22
+
+
+	Moment Tensor Elements: Cartesian Coordinates
+		-2.62 -0.84  3.18
+		-0.84  7.61 -0.50
+		 3.18 -0.50 -4.99
+
+	Eigenvalues:
+		T-axis eigenvalue=  7.73
+		N-axis eigenvalue= -0.52
+		P-axis eigenvalue= -7.20
+
+	Eigenvalues and eigenvectors of the Major Double Couple:
+		T-axis ev= 7.73 trend=276 plunge=4
+		N-axis ev= 0.00 trend=8 plunge=35
+		P-axis ev=-7.73 trend=180 plunge=55
+
+	Maximum Azmuithal Gap=176 Distance to Nearest Station= 31.0 (km)
+
+	Number of Stations (D=Displacement/V=Velocity) Used=7 (defining only)
+		
+	 REDF.NN.D MPK.NN.D WDEM.NN.D PAH.NN.D
+	 BEK.NN.D KVN.NN.D LHV.NN.D
+
+
+              -----------------                             
+          #########----------------                         
+        ##############------#########                       
+      #################################                     
+     ####################################                   
+    ###################---################                  
+  -##################------################                 
+  #################----------##############                 
+ #################------------##############                
+  ##############---------------#############                
+T #############-----------------#############               
+  ############------------------#############               
+ ############--------------------############               
+ ###########----------------------###########               
+ ###########----------------------##########                
+ ##########-----------------------##########                
+  #########-----------------------#########                 
+   #######--------   -------------#########                 
+   #######-------- P -------------########                  
+     #####--------   -------------#######                   
+      #####----------------------######                     
+        ###---------------------#####                       
+          ----------------------###                         
+              -----------------                             
+                                                            
+
+
+All Stations defining and nondefining: 
+Station.Net 	Def 	Distance 	Azi    	Bazi  	lo-f 	hi-f vmodel
+            	    	(km)     	(deg)  	(deg) 	(Hz) 	(Hz)    
+REDF.NN (D) 	Y 	    31.0  	356  	176  	0.020 	0.100 REDF.NN.wus.glib
+MPK.NN (D) 	Y 	    32.9  	307  	127  	0.020 	0.100 MPK.NN.wus.glib
+WDEM.NN (D) 	Y 	    52.5  	353  	173  	0.020 	0.100 WDEM.NN.wus.glib
+PAH.NN (D) 	Y 	    72.9  	 24  	204  	0.020 	0.100 PAH.NN.wus.glib
+BEK.NN (D) 	Y 	    99.9  	328  	147  	0.020 	0.100 BEK.NN.wus.glib
+KVN.NN (D) 	Y 	   141.3  	 92  	273  	0.020 	0.080 KVN.NN.wus.glib
+LHV.NN (D) 	Y 	   143.7  	131  	312  	0.020 	0.080 LHV.NN.wus.glib
+
+ (V)-velocity (D)-Displacement
+
+Author: www-data
+Date: 2020/03/21 02:17:27 UTC
+
+Date: 2020/03/20 19:17:27 PDT
+
+mtinv Version 3.0.6 Thu Jan 11 16:00:25 PST 2018
+
+</pre>

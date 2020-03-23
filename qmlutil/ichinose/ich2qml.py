@@ -187,12 +187,14 @@ class Parser(object):
         return int(ns.split('=')[-1])
 
     def _creation_time(self, n):
-        '''
+        """
         When file says it was made
-        '''
-        label, date, time = self.line[n].split()
-        date = date.replace('/','-')
-        return datetime.datetime.strptime('T'.join([date,time]), TIMEFMT)
+        """
+        label, datetime_str = self.line[n].split(" ", 1)
+        dt_zone = datetime_str.replace("/", "-").replace(" ", "T", 1).split()
+        if len(dt_zone) > 1 and dt_zone[1] != "UTC":
+            return None # Case: v3.0+ posts 2 times, 1 local, ignore for now
+        return datetime.datetime.strptime(dt_zone[0], TIMEFMT)
 
     def run(self):
         """
@@ -302,7 +304,9 @@ class Parser(object):
             if 'Maximum' in l and 'Gap' in l:
                 ichi['azimuthal_gap'] = p._gap(n)
             if re.match(r'^Date', l):
-                ichi['creation_time'] = p._creation_time(n)
+                ct = p._creation_time(n)
+                if ct is not None:
+                    ichi['creation_time'] = ct
         return ichi 
 
 

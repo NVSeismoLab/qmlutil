@@ -44,6 +44,8 @@ Dependencies
 There are no deps for core. The `aux` (change name to `plugins`) modules have various vendor reqs:
 * The `antelope` plugin requires the proprietary `antelope` packages and NSL's `curds2` DBAPI driver
 * The `xml` plugin requires the `lxml` package
+	- Requires libxml and libxslt to build this dep using pip
+	- Ubuntu/Debian names `libxml2-dev`, `libxslt`
 
 License
 -------

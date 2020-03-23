@@ -317,7 +317,7 @@ def test_ichinose_file():
     my_preproc = Rounder()
     
     # Test QuakeML file from text MT solution
-    MT_FILE = os.path.join(PWD, 'data', 'mt_509589.txt')
+    MT_FILE = os.path.join(PWD, 'data', "mt_719663_v3.0.6.txt") #'mt_509589_v2.1-dev.txt'
     with open(MT_FILE) as f:
         ichicnv = IchinoseToQmlConverter(
             f, 
@@ -332,7 +332,7 @@ def test_ichinose_file():
    
     assert 'magnitude' in event and len(event['magnitude']) > 0
     mag = event['magnitude'][0]
-    assert mag['mag'].get('value') == 3.95
+    assert mag['mag'].get('value') == 4.53 # old v2 example: 3.95
     assert mag['type'] == "Mwr"
 
     assert 'focalMechanism' in event and len(event['focalMechanism']) > 0
@@ -345,7 +345,7 @@ def test_ichinose_file():
     # Generate QuakeML and validate
     qmls = dumps(qmlroot, indent="  ", pretty=True, preprocessor=my_preproc)
     if pytest.config.getoption("--writefiles"):
-        with open('/tmp/qmlutil-test-ichinose-mt.xml', 'w') as f:
+        with open('/tmp/qmlutil-test-ichinose-mt.v3.xml', 'w') as f:
             f.write(qmls)
     assert validate(qmls)
     
