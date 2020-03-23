@@ -25,7 +25,7 @@ from setuptools import setup
 
 s_args = {
     'name': 'qmlutil',
-    'version': '0.9.0',
+    'version': '0.10.0',
     'description': 'QuakeML utils for python',
     'author': 'Mark Williams',
     'maintainer': 'Nevada Seismological Laboratory',
