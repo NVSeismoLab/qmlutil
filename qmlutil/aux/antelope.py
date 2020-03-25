@@ -19,14 +19,136 @@ qmlutil.aux.antelope
 
 Utillites for extracting data from Antelope -- 3rd party libs required
 """
+from collections import OrderedDict as Dict, defaultdict
+import datetime
 import math
 import logging
 
-from curds2.dbapi2 import connect
-from curds2.rows import OrderedDictRow
+try:
+    from antelope import datascope as antds
+except ImportError:
+    import os
+    import site
+    if not "ANTELOPE" in os.environ:
+        raise ImportError("Can't import antelope, 'ANTELOPE' env var not set?")
+    site.addsitedir(os.path.join(os.environ['ANTELOPE'],'data','python'))
+    from antelope import datascope as antds
 
 import qmlutil as qml
 from qmlutil.css import extract_id
+
+
+# This class replaces the lib for working with Antelope Datascope python
+# ** tested with 5.6 ** -MCW
+class Database(object):
+    """
+    Antelope Database utility method namespace
+    """
+    @classmethod
+    def open(cls, dbname=None, **kwargs):
+        """Open file or tmp file, diff kwargs are valid, returns ptr"""
+        if dbname is None:
+            return antds.dbtmp(**kwargs)
+        return antds.dbopen(dbname, **kwargs)
+    
+    @classmethod
+    def nullptr(cls, dbptr):
+        nptr = antds.Dbptr(dbptr)
+        nptr.record = antds.dbNULL
+        return nptr
+    
+    @classmethod
+    def schema(cls, dbptr):
+        """
+        Return description/attributes of the schema for a given pointer. Will
+        create unique names for fields in a view with non-unique duplicates.
+        """
+        db = antds.Dbptr(dbptr)
+        s = defaultdict(list)
+        table_fields = db.query(antds.dbTABLE_FIELDS)
+        s["primary_key"] = db.query(antds.dbPRIMARY_KEY)
+        for db.field, name in enumerate(table_fields):
+            # field names
+            if name in table_fields[:db.field]:
+                tablename = db.query(antds.dbFIELD_BASE_TABLE)
+                name = '.'.join([tablename, name])
+            s["fields"].append(name)
+            # type codes
+            type_code = db.query(antds.dbFIELD_TYPE)
+            s["field_types"].append(type_code)
+            # other features, may not be needed
+            #s["field_sizes"].append(db.query(antds.dbFIELD_SIZE))
+            #s["field_formats"].append(db.query(antds.dbFIELD_FORMAT))
+        return s
+    
+    @classmethod
+    def table_fields(cls, dbptr):
+        """Return unique field names for a view, which Antelope does not do."""
+        return cls.schema(dbptr).get("fields")
+    
+    @classmethod 
+    def convert_times_in_row(cls, rawrow, type_codes):
+        """
+        Convert a row value into a datetime. ONLY supports float TIME for now.
+        """
+        vals = []
+        for n, rawval in enumerate(rawrow):
+            # NOTE: dbTIME is float, add dbYEARDAY int, make option?
+            if type_codes[n] == antds.dbTIME and isinstance(rawval, float): 
+                v = datetime.datetime.utcfromtimestamp(rawval)
+            else:
+                v = rawval
+            vals.append(v)
+        return vals
+
+    @classmethod 
+    def convert_null_row(cls, rawrow, nullrow):
+        """
+        Return a row where any null value for a field is a python None
+        """
+        if len(rawrow) != len(nullrow):
+            raise ValueError("Rows are different lengths!")
+        vals = []
+        for n, nullval in enumerate(nullrow):
+            if rawrow[n] == nullval:
+                v = None
+            else:
+                v = rawrow[n]
+            vals.append(v)
+        return vals
+    
+    @classmethod
+    def get_rows(cls, dbptr, convert_null=False, convert_time=False, as_dict=False):
+        """
+        Extract field names and row data from view pointer.
+
+        Return fields and values suitable for use by the csv, json, or any
+        DBAPI2 modules.
+
+        This will pull every field from all rows the pointer is pointing to,
+        can optionally:
+            - convert NULL values to None 
+            - convert times to datetime
+            - return values as a dict instead of an ordered sequence of values.
+        """
+        dbptr = antds.Dbptr(dbptr)
+        attr = cls.schema(dbptr)
+        fields = attr.get("fields", [])
+        types = attr.get("field_types", [])
+        rows = []
+        if convert_null:
+            nullvals = cls.nullptr(dbptr).getv(*fields)
+        for dbptr.record in range(dbptr.record_count):
+            vals = dbptr.getv(*fields)
+            if convert_null:
+                vals = cls.convert_null_row(vals, nullvals)
+            if convert_time:
+                vals = cls.convert_times_in_row(vals, types)
+            if as_dict:
+                vals = Dict([(fields[n], v) for n, v in enumerate(vals)])
+            rows.append(vals)
+        return (fields, rows)
+
 
 class DatabaseConverter(object):
     """
@@ -34,46 +156,56 @@ class DatabaseConverter(object):
 
     Methods take an ORID, return QML elements/types
     """
-    connection = None  # DBAPI2 standard connection
+    dbptr = None # antelope.datascope.Dbptr
     converter = None # converter class
-
-    def __init__(self, connection, converter):
-        self.connection = connection
-        self.converter = converter
-        
-        self.connection.row_factory = OrderedDictRow
-        self.connection.CONVERT_NULL = True
     
+    # Database get_rows options to use as defaults
+    _rowopts = {}
+    
+    def rowopts(self, **kwargs):
+        """
+        Return copy of row options w/ substitutes
+        """
+        d = dict(self._rowopts)
+        d.update(kwargs)
+        return d
+
+    def __init__(self, dbptr, converter):
+        self.dbptr = dbptr
+        self.converter = converter
+        self._rowopts = {
+            "convert_null": True,
+            "as_dict": True,
+        }
+        
     def _evid(self, orid):
         """
         Get EVID from ORID
         """
         cmd = ['dbopen origin', 'dbsubset orid=={0}'.format(orid), 'dbsort lddate']
-        curs = self.connection.cursor()
-        rec = curs.execute('process', [cmd])
-        if rec:
-            return curs.fetchone().get('evid')
+        db = self.dbptr.process(cmd)
+        fields, rows = Database.get_rows(db, **self.rowopts())
+        if rows:
+            return rows[0].get('evid')
 
     def get_event(self, orid=None, evid=None, anss=False):
         if orid and not evid:
             evid = self._evid(orid)
         cmd = ['dbopen event', 'dbsubset evid=={0}'.format(evid)]
-        curs = self.connection.cursor()
-        rec = curs.execute('process', [cmd])
-        if rec:
-            ev = curs.fetchone()
-            return self.converter.map_event(ev, anss=anss)
+        db = self.dbptr.process(cmd)
+        fields, rows = Database.get_rows(db, **self.rowopts())
+        if rows:
+            return self.converter.map_event(rows[0], anss=anss)
     
     def get_event_from_origin(self, orid=None, anss=False):
         """
         Get event from origin table (in case no event/prefor)
         """
         cmd = ['dbopen origin', 'dbsubset orid=={0}'.format(orid)]
-        curs = self.connection.cursor()
-        rec = curs.execute('process', [cmd])
-        if rec:
-            ev = curs.fetchone()
-            return self.converter.map_event(ev, anss=anss)
+        db = self.dbptr.process(cmd)
+        fields, rows = Database.get_rows(db, **self.rowopts())
+        if rows:
+            return self.converter.map_event(rows[0], anss=anss)
 
     def get_focalmechs(self, orid=None):
         """
@@ -90,10 +222,10 @@ class DatabaseConverter(object):
         """
         cmd = ['dbopen fplane', 'dbsubset orid=={0}'.format(orid), 
             'dbsort -r lddate']
-        curs = self.connection.cursor()
-        rec = curs.execute('process', [cmd] )
-        curs.CONVERT_NULL = False  # Antelope schema bug - missing fplane NULLS
-        return self.converter.convert_focalmechs(curs, "fplane")
+        db = self.dbptr.process(cmd)
+        rowopts = self.rowopts(convert_null=False) # Antelope schema bug - missing fplane NULLS
+        fields, rows = Database.get_rows(db, **rowopts)
+        return self.converter.convert_focalmechs(rows, "fplane")
     
     def get_mts(self, orid=None):
         """
@@ -101,9 +233,9 @@ class DatabaseConverter(object):
         """
         cmd = ['dbopen mt', 'dbsubset orid=={0}'.format(orid), 
             'dbsort -r lddate']
-        curs = self.connection.cursor()
-        rec = curs.execute('process', [cmd] )
-        return self.converter.convert_focalmechs(curs, "mt")
+        db = self.dbptr.process(cmd)
+        fields, rows = Database.get_rows(db, **self.rowopts())
+        return self.converter.convert_focalmechs(rows, "mt")
 
     def get_origins(self, orid=None, evid=None):
         """
@@ -127,9 +259,9 @@ class DatabaseConverter(object):
             raise ValueError("Need to specify an ORID or EVID")
         
         cmd = ['dbopen origin', 'dbjoin -o origerr', substr, 'dbsort -r lddate']
-        curs = self.connection.cursor()
-        rec = curs.execute('process', [cmd] )
-        return self.converter.convert_origins(curs)
+        db = self.dbptr.process(cmd)
+        fields, rows = Database.get_rows(db, **self.rowopts())
+        return self.converter.convert_origins(rows)
     
     def get_magnitudes(self, orid=None, evid=None):
         """
@@ -155,19 +287,21 @@ class DatabaseConverter(object):
         substr = 'dbsubset orid=={0}'.format(orid)
         
         # 1. Check netmag table
-        curs = self.connection.cursor()
-        rec = curs.execute('process', [('dbopen netmag', substr, 'dbsort -r lddate')] )
-        if rec:
-            mags += [self.converter.map_netmag2magnitude(db) for db in curs]
+        cmd = ('dbopen netmag', substr, 'dbsort -r lddate')
+        db = self.dbptr.process(cmd)
+        fields, rows = Database.get_rows(db, **self.rowopts())
+        if rows:
+            mags += [self.converter.map_netmag2magnitude(r) for r in rows]
             return mags
 
         # 2. Check the origin table for the 3 types it holds
-        curs = self.connection.cursor()
-        rec = curs.execute('process', [('dbopen origin', substr)] )
-        if rec:
-            db = curs.fetchone()
-            mags += [self.converter.map_origin2magnitude(db, mtype=mtype) 
-                     for mtype in ('ml', 'mb', 'ms') if db.get(mtype)]
+        cmd = ('dbopen origin', substr)
+        db = self.dbptr.process(cmd)
+        fields, rows = Database.get_rows(db, **self.rowopts())
+        if rows:
+            r = row[0]
+            mags += [self.converter.map_origin2magnitude(r, mtype=mtype) 
+                     for mtype in ('ml', 'mb', 'ms') if r.get(mtype)]
         return mags
     
     def get_station_magnitudes(self, orid=None, evid=None, magid=None):
@@ -187,9 +321,9 @@ class DatabaseConverter(object):
             'dbjoin -o arrival', 'dbjoin -o snetsta',
             'dbjoin -o schanloc sta chan',
         ]
-        curs = self.connection.cursor()
-        rec = curs.execute('process', [cmd])
-        return self.converter.convert_magnitudes(curs)
+        db = self.dbptr.process(cmd)
+        fields, rows = Database.get_rows(db, **self.rowopts())
+        return self.converter.convert_magnitudes(rows)
 
     def get_phases(self, orid=None, evid=None):
         """
@@ -208,9 +342,9 @@ class DatabaseConverter(object):
         cmd = ['dbopen assoc', 'dbsubset orid=={0}'.format(orid),
                'dbjoin arrival', 'dbjoin -o snetsta',
                'dbjoin -o schanloc sta chan']
-        curs = self.connection.cursor()
-        rec = curs.execute('process', [cmd] )
-        return self.converter.convert_phases(curs)
+        db = self.dbptr.process(cmd)
+        fields, rows = Database.get_rows(db, **self.rowopts())
+        return self.converter.convert_phases(rows)
     
     #
     # TODO: this needs to be rewritten & abstracted out to higher level choices
@@ -284,24 +418,28 @@ def get_nearest_place(dsn, coords):
     """
     compass = ('N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW')
     wedge = 360./len(compass)
-
-    with connect(dsn, row_factory=OrderedDictRow, CONVERT_NULL=True) as conn:
-        coord = {'elat': coords[1], 'elon': coords[0]}
-        curs = conn.cursor()
-        n = curs.execute.lookup(table='places')
-        distances = [curs.execute.ex_eval("deg2km(distance({elat}, {elon}, lat, lon))".format(**coord)) for curs._record in range(curs.rowcount)]
-        backazis = [curs.execute.ex_eval("azimuth(lat, lon, {elat}, {elon})".format(**coord)) for curs._record in range(curs.rowcount)]
+    coord = {'elat': coords[1], 'elon': coords[0]}
+    rowopts = {"convert_null": True, "as_dict": True}
+    
+    dbptr = Database.open(dsn)
+    with antds.closing(dbptr):
+        db = dbptr.lookup(table='places')
+        distances = [db.ex_eval("deg2km(distance({elat}, {elon}, lat, lon))".format(**coord)) for db.record in range(db.record_count)]
+        backazis = [db.ex_eval("azimuth(lat, lon, {elat}, {elon})".format(**coord)) for db.record in range(db.record_count)]
         # Find the record with the min distance
         ind = min(xrange(len(distances)), key=distances.__getitem__) 
         dist = distances[ind]
         backazi = backazis[ind]
-        curs.scroll(int(ind), 'absolute')
-        minrec = curs.fetchone()
-        shift_azi = (backazi+wedge/2) - (360 * (int(backazi+wedge/2) / 360))
-        needle = compass[int(math.floor(shift_azi/wedge))]
-        place_info = {'distance': dist, 'direction': needle, 'city': minrec['place'], 'state': minrec['state']}
-        s = "{distance:0.1f} km {direction} of {city}, {state}".format(**place_info)
-        return s
+        #curs.scroll(int(ind), 'absolute')
+        #minrec = curs.fetchone()
+        fields, rows = Database.get_rows(db.lookup(record=ind), **rowopts)
+
+    minrec = rows[0]
+    shift_azi = (backazi+wedge/2) - (360 * (int(backazi+wedge/2) / 360))
+    needle = compass[int(math.floor(shift_azi/wedge))]
+    place_info = {'distance': dist, 'direction': needle, 'city': minrec['place'], 'state': minrec['state']}
+    s = "{distance:0.1f} km {direction} of {city}, {state}".format(**place_info)
+    return s
 
 
 class Db2Quakeml(object):
@@ -357,8 +495,9 @@ class Db2Quakeml(object):
         Maybe not the place for this method, but best place for now
         """
         try:
-            with connect(dsn) as conn:
-                db = DatabaseConverter(conn, self._conv)
+            dbptr = Database.open(dsn)
+            with antds.closing(dbptr):
+                db = DatabaseConverter(dbptr, self._conv)
                 ev = db.get_event(orid=orid, evid=evid, anss=anss)
             if ev is None:
                 raise ValueError("Event not found")
@@ -376,17 +515,18 @@ class Db2Quakeml(object):
         # IF REGULAR EVENT, USE DATABASE
         ##############################################################################
         # Make db Connection -- wrap in context
-        #with connect(dsn, row_factory=OrderedDictRow, CONVERT_NULL=True) as conn:
-        with connect(dsn) as conn:
-            db = DatabaseConverter(conn, self._conv)
-            ev = db.extract_origin(orid, 
-                    origin=origin, 
-                    magnitude=magnitude, 
-                    pick=pick, 
-                    focalMechanism=focalMechanism,
-                    stationMagnitude=stationMagnitude,
-                    anss=anss
-                    )
+        dbptr = Database.open(dsn)
+        with antds.closing(dbptr):
+            db = DatabaseConverter(dbptr, self._conv)
+            ev = db.extract_origin(
+                orid, 
+                origin=origin, 
+                magnitude=magnitude, 
+                pick=pick, 
+                focalMechanism=focalMechanism,
+                stationMagnitude=stationMagnitude,
+                anss=anss
+            )
 
         #
         # Set preferreds. The extract method should return in reversed time order, so
