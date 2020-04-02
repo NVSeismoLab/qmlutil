@@ -299,7 +299,7 @@ class DatabaseConverter(object):
         db = self.dbptr.process(cmd)
         fields, rows = Database.get_rows(db, **self.rowopts())
         if rows:
-            r = row[0]
+            r = rows[0]
             mags += [self.converter.map_origin2magnitude(r, mtype=mtype) 
                      for mtype in ('ml', 'mb', 'ms') if r.get(mtype)]
         return mags

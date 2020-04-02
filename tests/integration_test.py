@@ -65,7 +65,7 @@ def test_noprefor():
     event = conv.get_event(dsn, orid, pick=True, focalMechanism=True, anss=True)
     # Check event stuff, like anss...
     assert event['type'] == "earthquake" 
-    if isinstance(event['description'], dict):
+    if isinstance(event.get('description'), dict):
         assert event['description'].get('type') == "nearest cities"
     assert 'origin' in event and len(event['origin']) > 0
     assert 'magnitude' in event and len(event['magnitude']) > 0
@@ -113,7 +113,7 @@ def test_nullphase():
     event = conv.get_event(dsn, orid, pick=True, focalMechanism=True, anss=True)
     # Check event stuff, like anss...
     assert event['type'] == "earthquake" 
-    if isinstance(event['description'], dict):
+    if isinstance(event.get('description'), dict):
         assert event['description'].get('type') == "nearest cities"
     assert 'origin' in event and len(event['origin']) > 0
     assert 'magnitude' in event and len(event['magnitude']) > 0
@@ -163,7 +163,7 @@ def test_magnitudes():
             stationMagnitude=True, anss=True)
     # Check event stuff, like anss...
     assert event['type'] == "earthquake" 
-    if isinstance(event['description'], dict):
+    if isinstance(event.get('description'), dict):
         assert event['description'].get('type') == "nearest cities"
     assert 'origin' in event and len(event['origin']) > 0
     assert 'magnitude' in event and len(event['magnitude']) > 0
@@ -215,7 +215,7 @@ def test_db2qml():
             stationMagnitude=True, anss=True)
     # Check event stuff, like anss...
     assert event['type'] == "earthquake" 
-    if isinstance(event['description'], dict):
+    if isinstance(event.get('description'), dict):
         assert event['description'].get('type') == "nearest cities"
     assert 'origin' in event and len(event['origin']) > 0
     assert 'magnitude' in event and len(event['magnitude']) > 0
@@ -287,7 +287,7 @@ def test_db2qml():
     event = conv.get_event(dsn, orid, focalMechanism=True)
     # Check event stuff, like anss...
     assert event['type'] == "earthquake" 
-    if isinstance(event['description'], dict):
+    if isinstance(event.get('description'), dict):
         assert event['description'].get('type') == "nearest cities"
     assert 'origin' in event and len(event['origin']) > 0
     assert 'magnitude' in event and len(event['magnitude']) > 0
