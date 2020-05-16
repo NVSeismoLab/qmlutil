@@ -214,9 +214,21 @@ def test_db2qml():
     event = conv.get_event(dsn, orid, pick=True, focalMechanism=True,
             stationMagnitude=True, anss=True)
     # Check event stuff, like anss...
-    assert event['type'] == "earthquake" 
-    if isinstance(event['description'], dict):
-        assert event['description'].get('type') == "nearest cities"
+    assert event['type'] == "earthquake"
+    
+    desc = event.get('description')
+    if isinstance(desc, dict):
+        assert desc.get('type') == "nearest cities"
+    elif isinstance(desc, list):
+        assert len(desc) == 2
+        for d in desc:
+            type_ = d.get("type", "")
+            if type_ == "nearest cities":
+                nc = d
+            elif type_ == "earthquake name":
+                en = d
+        assert en.get("text") == "Example"
+
     assert 'origin' in event and len(event['origin']) > 0
     assert 'magnitude' in event and len(event['magnitude']) > 0
     assert 'pick' in event and len(event['pick']) > 0
