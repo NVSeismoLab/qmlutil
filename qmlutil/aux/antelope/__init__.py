@@ -430,9 +430,8 @@ def get_nearest_place(dsn, coords):
         ind = min(xrange(len(distances)), key=distances.__getitem__) 
         dist = distances[ind]
         backazi = backazis[ind]
-        #curs.scroll(int(ind), 'absolute')
-        #minrec = curs.fetchone()
-        fields, rows = Database.get_rows(db.lookup(record=ind), **rowopts)
+        db.record = ind
+        fields, rows = Database.get_rows(db, **rowopts)
 
     minrec = rows[0]
     shift_azi = (backazi+wedge/2) - (360 * (int(backazi+wedge/2) / 360))
