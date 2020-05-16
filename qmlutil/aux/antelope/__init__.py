@@ -551,7 +551,11 @@ class Db2Quakeml(object):
         try:
             orig = ev['origin'][0]
             ncd = get_nearest_place(self.placesdb, (orig['longitude']['value'], orig['latitude']['value']))
-            ev['description'] = self._conv.description(ncd)
+            desc = self._conv.description(ncd, "nearest cities")
+            if isinstance(ev.get('description'), list):
+                ev['description'].append(desc)
+            else:
+                ev['description'] = [desc]
         except Exception as e:
             self.logger.exception(e)
         return ev

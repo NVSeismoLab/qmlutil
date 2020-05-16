@@ -989,6 +989,7 @@ class CSSToQMLConverter(Root):
         lddate = db.get('lddate') or _ts(datetime.datetime.utcnow())
         prefor = db.get('prefor') or db.get('orid')
         eventID_rid = "{0}/{1}".format('event', evid)
+        event_name = db.get('evname')
         
         event = Dict([
             ('@publicID', self._uri(eventID_rid)),
@@ -1004,6 +1005,12 @@ class CSSToQMLConverter(Root):
         if prefor:
             originID_rid = "{0}/{1}".format('origin', prefor)
             event['preferredOriginID'] = self._uri(originID_rid)
+        
+        # Add a name if event table has one
+        if event_name:
+            name_desc = self.description(event_name, "earthquake name")
+            event['description'] = [name_desc]
+
         #
         # Add the ANSS NS parameters automatically
         #
