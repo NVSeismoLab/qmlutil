@@ -200,9 +200,16 @@ class CSSToQMLConverter(Root):
     get_event_type : static class method to convert CSS origin type flag
 
     """
+    # Map of CSS etype codes to event type
     etype_map = dict(ETYPE_MAP)
-    automatic_authors = []  # list of authors to mark as automatic
-    
+
+    # List of authors to mark as automatic
+    automatic_authors = []
+
+    # SEED codes to use if none specified for CSS sta/chan
+    default_netcode = "XX"
+    default_loccode = ""
+
     def __init__(self, *args, **kwargs):
         """
         Set event
@@ -367,7 +374,8 @@ class CSSToQMLConverter(Root):
         )
         
         # Create wavform ref, generic if no arrival-wfmeas join
-        def_net = self.agency[:2].upper()
+        def_net = self.default_netcode
+        def_loc = self.default_loccode
         css_sta = db.get('sta')
         css_chan = db.get('chan', 'AML') or 'AML'
         arrival_time = db.get('time', 0) or 0
@@ -400,7 +408,7 @@ class CSSToQMLConverter(Root):
                 ('@stationCode', db.get('fsta') or css_sta), 
                 ('@channelCode', db.get('fchan') or css_chan),
                 ('@networkCode', db.get('snet') or def_net),
-                ('@locationCode', db.get('loc') or ""),
+                ('@locationCode', db.get('loc') or def_loc),
                 ('#text', self._uri(wfID_rid, schema="smi")),  #'resourceURI' in schema
                 ])
             ),
@@ -552,7 +560,8 @@ class CSSToQMLConverter(Root):
         ----
         arrival <- snetsta [sta] (outer) <- schanloc [sta chan] (outer)
         """
-        def_net = self.agency[:2].upper()
+        def_net = self.default_netcode
+        def_loc = self.default_loccode
         css_sta = db.get('sta')
         css_chan = db.get('chan')
         wfID_rid = "{0}/{1}-{2}-{3}".format(
@@ -603,7 +612,7 @@ class CSSToQMLConverter(Root):
                 ('@stationCode', db.get('fsta') or css_sta), 
                 ('@channelCode', db.get('fchan') or css_chan),
                 ('@networkCode', db.get('snet') or def_net),
-                ('@locationCode', db.get('loc') or ""),
+                ('@locationCode', db.get('loc') or def_loc),
                 ('#text', self._uri(wfID_rid, schema="smi")),  #'resourceURI' in schema
                 ])
             ),
