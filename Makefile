@@ -1,7 +1,7 @@
 #
 # Make targets for qmlutil library
 #
-.PHONY : check clean test wheel
+.PHONY : check clean dist test wheel
 
 # Run unit tests with no deps or integration
 check :
@@ -18,5 +18,8 @@ clean :
 wheel :
 	pip wheel ./
 
+
+dist : 
+	python setup.py sdist
 
 
