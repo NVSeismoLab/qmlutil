@@ -7,11 +7,11 @@ ANTELOPE := /opt/antelope/5.6
 
 # Run unit tests with no deps or integration
 check :
-	ANTELOPE=$(ANTELOPE) py.test
+	ANTELOPE=$(ANTELOPE) py.test -m "not integration"
 
 # Run full verbose logging test suite with output written to tmp dir
 test : 
-	ANTELOPE=$(ANTELOPE) py.test -sv --integration --writefiles
+	ANTELOPE=$(ANTELOPE) py.test -sv --writefiles
 
 clean :
 	rm -f ./*.whl 

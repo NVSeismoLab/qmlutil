@@ -11,10 +11,11 @@ unless you want to.
 """
 import os
 import pytest
-integration = pytest.mark.skipif(
-    not pytest.config.getoption("--integration"),
-    reason="Use --integration flag to run integration tests"
-)
+#integration = pytest.mark.skipif(
+#    not pytest.config.getoption("--integration"),
+#    reason="Use --integration flag to run integration tests"
+#)
+integration = pytest.mark.integration
 
 PWD = os.path.dirname(__file__)
 
