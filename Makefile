@@ -1,15 +1,17 @@
 #
 # Make targets for qmlutil library
 #
+ANTELOPE := /opt/antelope/5.6
+
 .PHONY : check clean dist test wheel
 
 # Run unit tests with no deps or integration
 check :
-	py.test
+	ANTELOPE=$(ANTELOPE) py.test
 
 # Run full verbose logging test suite with output written to tmp dir
 test : 
-	py.test -sv --integration --writefiles
+	ANTELOPE=$(ANTELOPE) py.test -sv --integration --writefiles
 
 clean :
 	rm -f ./*.whl 
