@@ -430,10 +430,9 @@ def get_nearest_place(dsn, coords):
         ind = min(xrange(len(distances)), key=distances.__getitem__) 
         dist = distances[ind]
         backazi = backazis[ind]
-        db.record = ind
         fields, rows = Database.get_rows(db, **rowopts)
 
-    minrec = rows[0]
+    minrec = rows[ind]
     shift_azi = (backazi+wedge/2) - (360 * (int(backazi+wedge/2) / 360))
     needle = compass[int(math.floor(shift_azi/wedge))]
     place_info = {'distance': dist, 'direction': needle, 'city': minrec['place'], 'state': minrec['state']}
