@@ -70,6 +70,25 @@ def test_extract_id():
         assert case[1] == extract_id(case[0])
 
 
+def test_auto_author_status():
+    conv = Converter(
+        agency = my_agency_code,
+        rid_factory = ResourceURIGenerator("quakeml", my_authority_id),
+        utc_factory = timestamp2isostr,
+        etype_map = my_etype_map,
+        automatic_authors = ['orbassoc', 'orbmag'],
+    )
+    
+    mode, status = conv.status_from_author("orbassoc", "mode1", "status1")
+    assert mode == "automatic"
+    assert status == "preliminary"
+    
+    conv.automatic_authors = ["oa_nv", "HYPOI:rt"]
+    mode, status = conv.status_from_author("orbassoc")
+    assert mode == "manual"
+    assert status == "reviewed"
+    
+
 def test_map_origin():
     """
     Test converter for origins

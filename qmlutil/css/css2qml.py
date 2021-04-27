@@ -241,6 +241,7 @@ class CSSToQMLConverter(Root):
         etype = extract_etype(origin)
         return self.get_event_type(etype)
     
+    # TODO: rm deprecate in favor of status_from_author
     def get_event_status(self, posted_author):
         """
         Return mode and status based on author
@@ -252,6 +253,23 @@ class CSSToQMLConverter(Root):
                 return mode, status
         mode = "manual"
         status = "reviewed"
+        return mode, status
+    
+    def status_from_author(self, posted_author, default_mode="manual", default_status="reviewed"):
+        """
+        Return evaluation mode and status based on author. Since we keep a list
+        of "auto" authors, any auth value not in this list will return the
+        manual/reviewed settings by default. This can be changed with function
+        keyward args.
+        """
+        mode = default_mode
+        status = default_status
+        if not posted_author:
+            return mode, status
+        if posted_author in self.automatic_authors:
+            mode = "automatic"
+            status = "preliminary"
+            return mode, status
         return mode, status
 
     def map_origin2origin(self, db):
@@ -277,7 +295,7 @@ class CSSToQMLConverter(Root):
         """
         css_etype = _str(db.get('etype'))
         posted_author = _str(db.get('auth'))
-        mode, status = self.get_event_status(posted_author)
+        mode, status = self.status_from_author(posted_author)
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
         
         #-- Solution Uncertainties ----------------------------------
@@ -460,7 +478,7 @@ class CSSToQMLConverter(Root):
         input, e.g. OrderedDict, custom classes, etc.
         """
         posted_author = _str(db.get('auth'))
-        mode, status = self.get_event_status(posted_author)
+        mode, status = self.status_from_author(posted_author)
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
         netmagID_rid = "{0}/{1}".format('netmag', db.get('magid') or uuid.uuid4())
         
@@ -506,7 +524,7 @@ class CSSToQMLConverter(Root):
         input, e.g. OrderedDict, custom classes, etc.
         """
         author = _str(db.get('auth'))
-        mode, status = self.get_event_status(author)
+        mode, status = self.status_from_author(author)
         originID_rid = "{0}/{1}".format('origin', db.get('orid') or uuid.uuid4())
 
         # If foreign key to netmag table exists, use it as a unique id, 
@@ -593,14 +611,14 @@ class CSSToQMLConverter(Root):
         else:
             polarity = None
         
-        pick_mode = "automatic"
-        if 'orbassoc' not in _str(db.get('auth')):
-            pick_mode = "manual"
-        
-        pick_status = "preliminary"
-        if pick_mode is "manual":
-            pick_status = "reviewed"
-        
+        #pick_mode = "automatic"
+        #if 'orbassoc' not in _str(db.get('auth')):
+        #    pick_mode = "manual"
+        #pick_status = "preliminary"
+        #if pick_mode is "manual":
+        #    pick_status = "reviewed"
+        pick_mode, pick_status = self.status_from_author(_str(db.get("auth")))
+
         pick = Dict([
             ('@publicID', self._uri(pickID_rid)),
             ('time', _quan([
@@ -749,7 +767,7 @@ class CSSToQMLConverter(Root):
         author_string = ':'.join([db.get('algorithm'), db.get('auth')])
         
         # Determine from auth field
-        mode, status = self.get_event_status(_str(db.get('auth')))
+        mode, status = self.status_from_author(_str(db.get('auth')))
 
         nodal_planes = Dict([
             ('nodalPlane1', Dict([
