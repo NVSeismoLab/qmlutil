@@ -1,8 +1,6 @@
 qmlutil
 =======
-Utilities for QuakeML
-
-In a perfect world, all professional seismological applications speak QuakeML. This is for when that doesn't happen.
+Utilities for QuakeML schema conversions in pure-ish python
 
 About
 -----
@@ -10,7 +8,6 @@ This is the Nevada Seismological Lab's python package for dealing with "QML", th
 
 This module is a work-in-progress, and may change until a 1.0 release. That said, the goal is to keep the current methods and API stable up to and through the 1.0. NSL is currently using this lib in production, so it behooves us not to change the API as much as possible. More/better doc to come, hopefully.
 
-NSL builds all python libraries as wheels; to build qmlutil, clone the repo and build an installable wheel in the top-level directory:
 ```shell
 % git clone https://github.com/NVSeismoLab/qmlutil
 % pip wheel -w /tmp ./
@@ -42,7 +39,7 @@ Require other python libs
 Dependencies
 ------------
 There are no deps for core. The `aux` (change name to `plugins`) modules have various vendor reqs:
-* The `antelope` plugin requires the proprietary `antelope` packages and NSL's `curds2` DBAPI driver
+* The `antelope` plugin requires the proprietary `antelope` packages
 * The `xml` plugin requires the `lxml` package
 	- Requires libxml and libxslt to build this dep using pip
 	- Ubuntu/Debian names `libxml2-dev`, `libxslt`
